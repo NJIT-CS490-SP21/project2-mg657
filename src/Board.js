@@ -1,7 +1,9 @@
 import React from 'react';
 import './Board.css';
-import {useState} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import {Square} from './Square.js';
+import io from 'socket.io-client';
+const socket = io(); // Connects to socket connection
 export function Board(){
     const [board, setBoard] = useState(["","","","","","","","",""]);
     const [ isX, setX ] = useState(true);
@@ -10,9 +12,25 @@ export function Board(){
         newBoard[index] = isX ? "X" : "O";
         setBoard(prevBoard =>newBoard);
         setX(!isX);
-      
-    }
-  return (
+        socket.emit('board', {board: newBoard[index], index: index, isX: isX});
+  }
+  useEffect(() => {
+    // Listening for a chat event emitted by the server. If received, we
+    // run the code in the function that is passed in as the second arg
+    socket.on('board', (data) => {
+      console.log('Board event received!');
+      setBoard(prevBoard =>{
+        let newBoard = [...prevBoard];
+        newBoard[data.index] = data.isX ? "X" : "O";
+        setX(!data.isX);
+        return (newBoard)
+      });
+      console.log(data);
+      // If the server sends a message (on behalf of another client), then we
+      // add it to the list of messages to render it on the UI.
+    });
+  }, []);
+    return (
     <div class="board">
     <Square onClickSquare={onClickSquare} board={board} index={0} />
     <Square onClickSquare={onClickSquare} board={board} index={1} />
