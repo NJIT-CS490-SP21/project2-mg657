@@ -26,8 +26,6 @@ export function Board(){
         return (newBoard)
       });
       console.log(data);
-      // If the server sends a message (on behalf of another client), then we
-      // add it to the list of messages to render it on the UI.
     });
   }, []);
     return (
