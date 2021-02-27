@@ -1,6 +1,7 @@
 import React from 'react';
 import './Board.css';
 import {useState, useRef, useEffect} from 'react';
+import {calculateWinner, isBoardFull} from './IsWinner.js';
 import {Square} from './Square.js';
 import io from 'socket.io-client';
 const socket = io(); // Connects to socket connection
@@ -14,7 +15,17 @@ export function Board(){
         setX(!isX);
         socket.emit('board', {board: newBoard[index], index: index, isX: isX});
   }
-  
+  function isDraw(board){
+    var winner = "";
+    if(isBoardFull(board) && !calculateWinner(board)){
+      console.log("DRAW");
+      winner = "It is a draw";}
+    else{
+      winner = calculateWinner(board);
+      }
+    return winner;
+  }
+
   useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
     // run the code in the function that is passed in as the second arg
@@ -30,6 +41,7 @@ export function Board(){
     });
   }, []);
     return (
+    <div>
     <div class="board">
     <Square onClickSquare={onClickSquare} board={board} index={0} />
     <Square onClickSquare={onClickSquare} board={board} index={1} />
@@ -40,5 +52,7 @@ export function Board(){
     <Square onClickSquare={onClickSquare} board={board} index={6} />
     <Square onClickSquare={onClickSquare} board={board} index={7} />
     <Square onClickSquare={onClickSquare} board={board} index={8} />
+    </div>
+    <li>The winner is: {isDraw(board)}</li>
     </div>);
 }
