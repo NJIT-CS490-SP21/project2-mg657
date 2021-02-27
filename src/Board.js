@@ -14,6 +14,7 @@ export function Board(){
         setX(!isX);
         socket.emit('board', {board: newBoard[index], index: index, isX: isX});
   }
+  
   useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
     // run the code in the function that is passed in as the second arg

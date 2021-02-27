@@ -7,44 +7,45 @@ import io from 'socket.io-client';
 const socket = io(); // Connects to socket connection
 
 function App() {
-  const [players, setPlayers] = useState([]); // State variable, list of players
+  const [players, setPlayers] = useState({"PlayerX":"", "PlayerY": "", "Spectators": []}); // State variable, list of players
   const playerRef = useRef(null); // Reference to <input> element
   function onClickButton() {
     if (playerRef != null) {
       const player = playerRef.current.value;
-      setPlayers(oldPlayer => [...oldPlayer, player]);
-      const playerX = players[0];
-      const playerY = players[1];
-      const spectators = players.slice(2);
-      if(players.length==1){
-        socket.emit('login', {player: player, players: players, playerX:playerX});
+      var playerCopy = {...players};
+      if (playerCopy["PlayerX"]!="" && playerCopy["PlayerY"]!=""){
+        playerCopy["Spectators"].push(player);
       }
-      else if(players.length==2){
-        socket.emit('login', {player: player, players: players, playerX:playerX, playerY:playerY});
+      else if (playerCopy["PlayerX"]==""){
+        playerCopy["PlayerX"] = player;
       }
-      else if(players.length>2){
-        socket.emit('login', {player: player, players: players, playerX:playerX, playerY:playerY, spectators:spectators});
+      else if (playerCopy["PlayerX"]!="" && playerCopy["PlayerY"]==""){
+        playerCopy["PlayerY"] = player;
       }
-      else{
-        socket.emit('login', {player: player, players: players});
-      }
-      
+      setPlayers(playerCopy);
+      //console.log(playerCopy);
+      socket.emit('login', {players: playerCopy});
     }
   }
   useEffect(() => {
     socket.on('login', (data) => {
       console.log('Login event received!');
-      setPlayers(oldPlayer => [...oldPlayer, data.player]);
-      console.log(data);
+      var newPlayer = {...data.players}
+      setPlayers(newPlayer);
       });
   }, []);
-
+  console.log(players);
   return (
     <div>
-      <h1>Login Info</h1>
+      <h1>Login Here</h1>
       Enter username: <input ref={playerRef} type="text" />
       <button onClick={onClickButton}>Submit</button>
-      {players.map((player) => <li>{player}</li>)}
+      <ul>
+      <li>Player X: {players["PlayerX"]}</li>
+      <li>Player O: {players["PlayerY"]}</li>
+      {players["Spectators"].map((item) => <li>Spectators: {item} </li> )}
+      </ul>
+      
      
       <Board />
     </div>
