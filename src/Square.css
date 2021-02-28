@@ -1,3 +1,10 @@
-.box {
-    border: 1px solid black; /* Shows the lines in the CSS grid */
+.box
+{
+  border: 6px solid white;
+  font-family: Helvetica;
+  font-weight: bold;
+  font-size: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

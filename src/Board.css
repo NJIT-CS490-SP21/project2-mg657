@@ -1,7 +1,48 @@
 .board {
-    width: 300px; /* Total horizontal dimensions */
-	height: 300px; /* Total vertical dimensions */
-	display: grid; /* Enables CSS Grid */ 
+	width: 350px; /*Total horizontal dimensions */
+	height: 350px; /*Total vertical dimensions */
+	margin: 0 auto;
+	background-color: #B15B60;
+	color: Lavender;
+	border: 6px solid #B15B60;
+	border-radius: 10px;
+	display: grid; /*Enables CSS Grid */
 	grid-template-columns: repeat(3, 1fr); /* Total horizontal space broken into 3 columns */
-	grid-template-rows: repeat(3, 1fr); /* Total vertical space broken into 3 rows */
+	grid-template-rows: repeat(3, 1fr);  /*Total vertical space broken into 3 rows */
+	
+}
+.login{
+    font-family: 'Trebuchet MS', sans-serif;
+    color: #B15B60;
+}
+input[type="text"] {
+	height: 1.5rem;
+    font-family: 'Lato', sans-serif;
+    border: 0;
+    outline: 0; 
+    border-radius: .7rem;
+    appearance: none;
+    z-index: 1;
+    position: relative;
+    color: #B15B60;
+    font-size: 1.2rem;
+    width: 20%;
+    background: Lavender;
+}
+.players{
+	color: #B15B60;
+	font-family: 'Roboto', sans-serif;
+}
+button{
+	background-color: #B15B60;
+	font-family: 'Roboto', sans-serif;
+	color: Lavender;
+	border: 0;
+    outline: 0; 
+    border-radius: .7rem;
+    width:10%;
+	
+}
+.submit{
+	width:5%;
 }
