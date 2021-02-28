@@ -11,31 +11,35 @@ export function Board(){
     const [players, setPlayers] = useState({"PlayerX":"", "PlayerO": "", "Spectators": []}); // State variable, list of players
     const playerRef = useRef(null); // Reference to <input> element
     const [isLogged, setLog] = useState(false);
-    const [playerX, setPlayerX] = useState(false);
-    const [playerO, setPlayerO] = useState(false);
-    const [spectators, setSpectators] = useState(false);
+    
     function onClickSquare(index){
-        let newBoard = [...board];
         const currUser = playerRef.current.value;
         if(players["Spectators"].includes(currUser)){
           return;
         }
-        newBoard[index] = isX ? "X" : "O";
-        setBoard(prevBoard =>newBoard);
-        setX(!isX);
-        socket.emit('board', {board: newBoard[index], index: index, isX: isX});
+        if(players["PlayerX"]!="" && players["PlayerO"]!=""){
+          if((isX && currUser==players["PlayerX"]) || (!isX && currUser==players["PlayerO"])){
+            let newBoard = [...board];
+            newBoard[index] = isX ? "X" : "O";
+            setBoard(newBoard);
+            setX(!isX);
+            socket.emit('board', {board: newBoard[index], index: index, isX: isX});
+          }}
   }
  
-  
   function isDraw(board){
     var winner = "";
     if(isBoardFull(board) && !calculateWinner(board)){
       winner = <p>It is a draw</p>;}
-    else{
-      winner = <p>The winner is <div>{calculateWinner(board)}!</div></p>;}
-    return winner;
-  }
- 
+    else if (calculateWinner(board)){
+      if(calculateWinner(board) == "X"){
+        winner = <p>The winner is {players["PlayerX"]}!</p>;}
+      if(calculateWinner(board) == "O"){
+        winner = <p>The winner is {players["PlayerO"]}!</p>;}
+      }
+        return winner;
+      }
+      
   function onClickButton() {
     if (playerRef != null) {
       setLog(true);
@@ -43,28 +47,28 @@ export function Board(){
       var playerCopy = {...players};
       if (playerCopy["PlayerX"]!="" && playerCopy["PlayerO"]!=""){
         playerCopy["Spectators"].push(player);
-        setSpectators(true);
       }
       else if (playerCopy["PlayerX"]==""){
         playerCopy["PlayerX"] = player;
-        setPlayerX(true);
       }
       else if (playerCopy["PlayerX"]!="" && playerCopy["PlayerO"]==""){
         playerCopy["PlayerO"] = player;
-        setPlayerO(true);
       }
       setPlayers(playerCopy);
       socket.emit('login', {players: playerCopy});
     }
   }
+  
    function displayPlayers(){
-    if(playerX || playerO || spectators){
+    if(players["PlayerX"]!="" || players["PlayerO"]!="" || players["Spectators"]!=""){
       return (<div><h3>Player X</h3>{players["PlayerX"]}
       <h3>Player O</h3> {players["PlayerO"]}
       <h3>Spectators</h3>
       {players["Spectators"].map((item) => <p>{item} </p> )}
       {isLogged ? 
             <div>
+            {isX?<p>Player {players["PlayerX"]}'s turn</p>:<p>Player {players["PlayerO"]}'s turn</p>}
+            
             <div class="board">
     <Square onClickSquare={onClickSquare} board={board} index={0} />
     <Square onClickSquare={onClickSquare} board={board} index={1} />
@@ -77,13 +81,17 @@ export function Board(){
     <Square onClickSquare={onClickSquare} board={board} index={8} />
     </div>
     {isDraw(board)}
+    <br />
+    <button onClick={resetBoard}>Reset</button>
     </div>:null}</div>);
     }
     else{
       return;
     }
   }
-
+  function resetBoard(){
+    setBoard(["","","","","","","","",""]);
+  }
   useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
     // run the code in the function that is passed in as the second arg
@@ -106,9 +114,10 @@ export function Board(){
   console.log(players);
     return (
     <div>
-    <h1>Login </h1>
+    <h1>Login</h1>
     <input ref={playerRef} type="text" placeholder = "Enter Username" />
     <button onClick={onClickButton}>Submit</button>
     {displayPlayers()}
+    
     </div>);
 }

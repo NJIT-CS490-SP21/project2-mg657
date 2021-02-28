@@ -10,7 +10,9 @@ const socket = io(); // Connects to socket connection
 function App() {
   return (
     <div>
+    <center>
       <Board />
+    </center>
     </div>
   );
 }

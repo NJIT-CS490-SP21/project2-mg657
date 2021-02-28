@@ -21,7 +21,7 @@ export function calculateWinner(squares) {
 }
 export function isBoardFull(squares) {
       for (let i = 0; i < squares.length; i++) {
-        if (squares[i] == null) {
+        if (squares[i] == "") {
           return false;}
       }
       return true;}
