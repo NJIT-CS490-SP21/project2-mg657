@@ -12,12 +12,13 @@
 	
 }
 .login{
-    font-family: 'Trebuchet MS', sans-serif;
+    font-family: 'Courier New', monospace;
+    font-size:1.7em;
     color: #B15B60;
 }
 input[type="text"] {
 	height: 1.5rem;
-    font-family: 'Lato', sans-serif;
+     font-family: 'Trebuchet MS', sans-serif;
     border: 0;
     outline: 0; 
     border-radius: .7rem;
@@ -29,20 +30,27 @@ input[type="text"] {
     width: 20%;
     background: Lavender;
 }
+::placeholder {
+  color: #989898;
+  font-size:0.9em;
+  opacity: 1; /* Firefox */
+}
+
 .players{
 	color: #B15B60;
-	font-family: 'Roboto', sans-serif;
+	 font-family: 'Trebuchet MS', sans-serif;
 }
 button{
 	background-color: #B15B60;
-	font-family: 'Roboto', sans-serif;
+	 font-family: 'Trebuchet MS', sans-serif;
 	color: Lavender;
 	border: 0;
     outline: 0; 
     border-radius: .7rem;
+    font-size: 1em;
     width:10%;
 	
 }
 .submit{
-	width:5%;
+	width:7%;
 }

@@ -38,11 +38,29 @@ export function Board() {
       }
     }
   }
-
-  function onClickSubmit() {
-    if (playerRef != null) { //if they have entered a user
+  function canLogIn(player){
+    if(player!=""){ //if they entered something
+      if(player==players["PlayerX"]){ //if they entered something that isn't the same as PlayerX
+        return false;
+      }
+      else if(player==players["PlayerO"]){ //if they entered something that isn't the same as PlayerO
+        return false;
+      }
+      else if (players["Spectators"].includes(player)){ //if they entered something that isn't the same as a spectator
+        return false;
+      }
       setLog(true);
-      const player = playerRef.current.value;
+      return true; //they can log in!
+    }
+    else{
+      return false;
+    }
+    
+  }
+  function onClickLogin() {
+    const player = playerRef.current.value;
+    if (canLogIn(player)) { //if they can log in
+      
       var playerCopy = {...players};
       if (playerCopy["PlayerX"] != "" && playerCopy["PlayerO"] != "") { //if there's a playerX and O, they are a spectator
         playerCopy["Spectators"].push(player);} 
@@ -59,14 +77,14 @@ export function Board() {
   function displayWinner(board) {
     var winner = "";
     if (isBoardFull(board) && !calculateWinner(board)) { //if it is a full board and no winner, it is a draw
-      winner = <div><p> It is a draw </p><br/> </div>;
+      winner = <div><p><b>It is a draw!</b></p></div>;
     } 
     else if (calculateWinner(board)) { //if there is a winner
       if (calculateWinner(board) == "X") { //if the winner is player X, display message
-        winner = <div> <p> The winner is {players["PlayerX"]}!</p><br/></div>; 
+        winner = <div> <p> The winner is <b>{players["PlayerX"]}</b>!</p></div>; 
       }
       if (calculateWinner(board) == "O") { //if the winner is player O, display message
-        winner=<div><p>The winner is {players["PlayerO"]}!</p><br/></div>;}
+        winner=<div><p><b>The winner is {players["PlayerO"]}</b>!</p></div>;}
     }
     if(winner){ //only display play again button if there is a winner or draw
       return(<div class="players">{winner}<button class = "again" onClick = {resetBoard}>Play Again</button></div>);
@@ -79,8 +97,7 @@ export function Board() {
     setX(true); //player X always goes first
     socket.emit('resetBoard', {board: boardCopy,isX: true});
   }
-  useEffect(() => {// Listening for an event emitted by server. If received, we
-              // run the code in the function that is passed in as the second arg
+  useEffect(() => {// listens for event emitted by server, if received, run code for corresponding channel
     socket.on('board', (data) => {
       console.log('Board event received!');
       setBoard(prevBoard => {
@@ -88,14 +105,17 @@ export function Board() {
       newBoard[data.index] = data.isX ? "X" : "O";
       setX(!data.isX);
       return (newBoard)});
-      console.log(data);});
+      console.log(data);
+    });
     socket.on('login', (data) => {
       console.log('Login event received!');
       var newPlayer = {...data.players};
-      setPlayers(newPlayer);});
+      setPlayers(newPlayer);
+    });
     socket.on('resetBoard', (data) => {
       setBoard(data.board);
-      setX(data.isX);});
+      setX(data.isX);
+    });
     }, []);
 
   function displayPlayers() {
@@ -103,13 +123,13 @@ export function Board() {
     var playerBoardO = "";
     var playerBoardSpect = "";
     if (players["PlayerX"] != "") { //only shows users who have logged in 
-      playerBoardX = <div> <p> Player X: {players["PlayerX"]}</p></div >;
+      playerBoardX = <div><p>Player X: {players["PlayerX"]}</p></div >;
       if (players["PlayerO"] != "") {
-        playerBoardO = <div> <p>Player O: {players["PlayerO"]}</p> </div>;
+        playerBoardO = <div><p>Player O: {players["PlayerO"]}</p></div>;
         if (players["Spectators"] != "") {
-          playerBoardSpect = <div> <p>Spectators: {players["Spectators"].map((item) => <div>{item}</div> )}</p></div >;}
-    }
-      
+          playerBoardSpect = <div><p>Spectators: {players["Spectators"].map((item) => <div>{item}</div>)}</p></div>;
+        }
+      } 
     }
     if (players["PlayerX"] != "" || players["PlayerO"] != "" || players["Spectators"] != "") {
         return (<div> {isLogged ?
@@ -117,22 +137,20 @@ export function Board() {
                   <div class = "players">
                   <br/>
                   Welcome to Tic Tac Toe <b>{playerRef.current.value}</b>
-                  
                   {playerBoardX}{playerBoardO}{playerBoardSpect} 
                   {isX ? 
-                      <p> Player {players["PlayerX"]}'s turn</p>:
-                      <p>Player {players["PlayerO"]}'s turn </p>} 
+                      <p> {players["PlayerX"]}'s turn</p>:
+                      <p> {players["PlayerO"]}'s turn </p>} 
                   </div>
                   </div>:null}
                 </div>);
       }
-      //else {return;}
       }
     console.log(players);
     if (playerRef != null) {
-      return ( <div><h1 class ="login"> Login </h1>
+      return ( <div><h1 class ="login"> Login To Play! </h1>
       <input ref = {playerRef} type = "text" placeholder = "Enter Username" /> <br/><br/>
-      <button class = "submit" onClick = {onClickSubmit}> Submit </button> {displayPlayers()} 
+      <button class = "submit" onClick = {onClickLogin}> Login </button> {displayPlayers()} 
       {isLogged?
       <div>
       <div class = "board">
