@@ -17,7 +17,6 @@ socketio = SocketIO(
 @app.route('/<path:filename>')
 def index(filename):
     return send_from_directory('./build', filename)
-
 # When a client connects from this Socket connection, this function is run
 @socketio.on('connect')
 def on_connect():
