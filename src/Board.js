@@ -11,33 +11,45 @@ export function Board(){
     const [players, setPlayers] = useState({"PlayerX":"", "PlayerO": "", "Spectators": []}); // State variable, list of players
     const playerRef = useRef(null); // Reference to <input> element
     const [isLogged, setLog] = useState(false);
-    
+    const [currUser, setUser] = useState("");
+    const [isReset, setReset] = useState(false);
     function onClickSquare(index){
-        const currUser = playerRef.current.value;
-        if(players["Spectators"].includes(currUser)){
-          return;
+      if (canClickBoard()){
+        let newBoard = [...board];
+        if(newBoard[index]==""){
+          newBoard[index] = isX ? "X" : "O";
+          setBoard(newBoard);
+          setX(!isX);
+          socket.emit('board', {board: newBoard[index], index: index, isX: isX});
         }
-        if(players["PlayerX"]!="" && players["PlayerO"]!=""){
-          if((isX && currUser==players["PlayerX"]) || (!isX && currUser==players["PlayerO"])){
-            let newBoard = [...board];
-            newBoard[index] = isX ? "X" : "O";
-            setBoard(newBoard);
-            setX(!isX);
-            socket.emit('board', {board: newBoard[index], index: index, isX: isX});
-          }}
+        
+      }
   }
+  function canClickBoard(){
+    setUser(playerRef.current.value);
+    if(players["Spectators"].includes(currUser)){
+      return false;}
+    if (isDraw(board)){
+      return false;
+    }
+    if(players["PlayerX"]!="" && players["PlayerO"]!=""){
+      if((isX && currUser==players["PlayerX"]) || (!isX && currUser==players["PlayerO"])){
+      return true;
+    }
+    }
+  }
+
  
   function isDraw(board){
     var winner = "";
     if(isBoardFull(board) && !calculateWinner(board)){
-      winner = <p>It is a draw</p>;}
+      return(<div><p>It is a draw</p><br /><button onClick={resetBoard}>Reset</button></div>);}
     else if (calculateWinner(board)){
       if(calculateWinner(board) == "X"){
-        winner = <p>The winner is {players["PlayerX"]}!</p>;}
+        return(<div><p>The winner is Player {players["PlayerX"]}!</p><br /><button onClick={resetBoard}>Reset</button></div>);}
       if(calculateWinner(board) == "O"){
-        winner = <p>The winner is {players["PlayerO"]}!</p>;}
+        return(<div><p>The winner is Player {players["PlayerO"]}!</p><br /><button onClick={resetBoard}>Reset</button></div>);}
       }
-        return winner;
       }
       
   function onClickButton() {
@@ -60,15 +72,23 @@ export function Board(){
   }
   
    function displayPlayers(){
+     var playerBoard = ""
+     if(players["PlayerX"]!="" && players["PlayerO"]=="" && players["Spectators"]==""){
+       playerBoard = <div><h3>Player X</h3>{players["PlayerX"]}</div>;
+     }
+     else if (players["PlayerX"]!="" &&players["PlayerO"]!="" && players["Spectators"]==""){
+       playerBoard = <div><h3>Player X</h3>{players["PlayerX"]} <h3>Player O</h3> {players["PlayerO"]}</div>;
+     }
+     else if(players["PlayerX"]!="" && players["PlayerO"]!="" && players["Spectators"]!=""){
+       playerBoard = <div><h3>Player X</h3>{players["PlayerX"]} <h3>Player O</h3> {players["PlayerO"]}<h3>Spectators</h3>
+      {players["Spectators"].map((item) => <p>{item} </p> )}</div>;
+     }
     if(players["PlayerX"]!="" || players["PlayerO"]!="" || players["Spectators"]!=""){
-      return (<div><h3>Player X</h3>{players["PlayerX"]}
-      <h3>Player O</h3> {players["PlayerO"]}
-      <h3>Spectators</h3>
-      {players["Spectators"].map((item) => <p>{item} </p> )}
+      return (<div>
       {isLogged ? 
             <div>
+            {playerBoard}
             {isX?<p>Player {players["PlayerX"]}'s turn</p>:<p>Player {players["PlayerO"]}'s turn</p>}
-            
             <div class="board">
     <Square onClickSquare={onClickSquare} board={board} index={0} />
     <Square onClickSquare={onClickSquare} board={board} index={1} />
@@ -81,16 +101,18 @@ export function Board(){
     <Square onClickSquare={onClickSquare} board={board} index={8} />
     </div>
     {isDraw(board)}
-    <br />
-    <button onClick={resetBoard}>Reset</button>
     </div>:null}</div>);
     }
     else{
       return;
     }
   }
+  
   function resetBoard(){
-    setBoard(["","","","","","","","",""]);
+    let boardCopy = ["","","","","","","","",""];
+    setBoard(boardCopy);
+    setX(true);
+    socket.emit('resetBoard', {board: boardCopy, isX: true});
   }
   useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
@@ -110,14 +132,20 @@ export function Board(){
       var newPlayer = {...data.players}
       setPlayers(newPlayer);
       });
+    socket.on('resetBoard', (data) =>{
+      setBoard(data.board);
+      setX(data.isX);
+    });
   }, []);
   console.log(players);
-    return (
-    <div>
-    <h1>Login</h1>
-    <input ref={playerRef} type="text" placeholder = "Enter Username" />
-    <button onClick={onClickButton}>Submit</button>
-    {displayPlayers()}
+    if(playerRef!=null){
+      return (
+      <div>
+      <h1>Login</h1>
+      <input ref={playerRef} type="text" placeholder = "Enter Username"  />
+      <button onClick={onClickButton}>Submit</button>
+      {displayPlayers()}
+      </div>);
+    }
     
-    </div>);
 }
