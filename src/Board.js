@@ -147,9 +147,10 @@ export function Board() {
       }
       }
     console.log(players);
+    console.log(isLogged);
     if (playerRef != null) {
       return ( <div><h1 class ="login"> Login To Play! </h1>
-      <input ref = {playerRef} type = "text" placeholder = "Enter Username" /> <br/><br/>
+      <input ref = {playerRef} type = "text" placeholder = "Enter Username" disabled={isLogged}/> <br/><br/>
       <button class = "submit" onClick = {onClickLogin}> Login </button> {displayPlayers()} 
       {isLogged?
       <div>
