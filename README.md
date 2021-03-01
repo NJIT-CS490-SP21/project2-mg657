@@ -1,5 +1,5 @@
 # Project 2 - Tic Tac Toe
-Preview Application: [https://boiling-waters-90168.herokuapp.com/](https://boiling-waters-90168.herokuapp.com/)
+Preview Application: [https://sheltered-refuge-85680.herokuapp.com/](https://sheltered-refuge-85680.herokuapp.com/)
 ## Clone the repo
 CLI Command: `git clone https://github.com/NJIT-CS490-SP21/project2-mg657`
 <br /> If you cd into the repository you'll see all the files
