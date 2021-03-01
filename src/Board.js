@@ -25,7 +25,6 @@ export function Board() {
   }
 
   function canClickBoard() {
-    //const currUser = playerRef.current.value;
     if (players["Spectators"].includes(currUser)) { //if they are a spectator, can't click board
       return false;
     }
@@ -59,7 +58,7 @@ export function Board() {
   }
   function onClickLogin() {
     const player = playerRef.current.value;
-    setUser(player);
+    setUser(player); //set the username upon login
     if (canLogIn(player)) { //if they can log in
       var playerCopy = {...players};
       if (playerCopy["PlayerX"] != "" && playerCopy["PlayerO"] != "") { //if there's a playerX and O, they are a spectator
