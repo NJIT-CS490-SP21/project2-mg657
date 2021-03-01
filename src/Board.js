@@ -11,7 +11,7 @@ export function Board() {
   const [players, setPlayers] = useState({"PlayerX": "","PlayerO": "","Spectators": []}); // set empty dict to keep track of players
   const playerRef = useRef(null); // references <input> element
   const [isLogged, setLog] = useState(false); //useState to check if user is logged in
-
+  const [currUser, setUser] = useState(""); //useState for the current username
   function onClickSquare(index) {
     if (canClickBoard()) { //if they're allowed to play
       let newBoard = [...board];
@@ -25,7 +25,7 @@ export function Board() {
   }
 
   function canClickBoard() {
-    const currUser = playerRef.current.value;
+    //const currUser = playerRef.current.value;
     if (players["Spectators"].includes(currUser)) { //if they are a spectator, can't click board
       return false;
     }
@@ -59,8 +59,8 @@ export function Board() {
   }
   function onClickLogin() {
     const player = playerRef.current.value;
+    setUser(player);
     if (canLogIn(player)) { //if they can log in
-      
       var playerCopy = {...players};
       if (playerCopy["PlayerX"] != "" && playerCopy["PlayerO"] != "") { //if there's a playerX and O, they are a spectator
         playerCopy["Spectators"].push(player);} 
@@ -132,28 +132,25 @@ export function Board() {
       } 
     }
     if (players["PlayerX"] != "" || players["PlayerO"] != "" || players["Spectators"] != "") {
-        return (<div> {isLogged ?
+        return (
                   <div> 
                   <div class = "players">
                   <br/>
-                  Welcome to Tic Tac Toe <b>{playerRef.current.value}</b>
+                  Welcome to Tic Tac Toe <b>{currUser}</b>
                   {playerBoardX}{playerBoardO}{playerBoardSpect} 
                   {isX ? 
                       <p> {players["PlayerX"]}'s turn</p>:
                       <p> {players["PlayerO"]}'s turn </p>} 
                   </div>
-                  </div>:null}
-                </div>);
+                  </div>);
       }
       }
     console.log(players);
-    console.log(isLogged);
     if (playerRef != null) {
-      return ( <div><h1 class ="login"> Login To Play! </h1>
-      <input ref = {playerRef} type = "text" placeholder = "Enter Username" disabled={isLogged}/> <br/><br/>
-      <button class = "submit" onClick = {onClickLogin}> Login </button> {displayPlayers()} 
+      return ( <div>
       {isLogged?
       <div>
+      {displayPlayers()} 
       <div class = "board">
         <Square onClickSquare={onClickSquare} board={board} index={0} />
         <Square onClickSquare={onClickSquare} board={board} index={1} />
@@ -164,6 +161,9 @@ export function Board() {
         <Square onClickSquare={onClickSquare} board={board} index={6} />
         <Square onClickSquare={onClickSquare} board={board} index={7} />
         <Square onClickSquare={onClickSquare} board={board} index={8} /> 
-      </div>{displayWinner(board)}</div>:null}
+      </div>{displayWinner(board)}</div>:
+      <div><h1 class ="login"> Login To Play! </h1>
+      <input ref = {playerRef} type = "text" placeholder = "Enter Username" /> <br/><br/>
+      <button class = "submit" onClick = {onClickLogin}> Login </button> </div>}
       </div>);
     }}
