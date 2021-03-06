@@ -1,16 +1,16 @@
 import React from 'react';
 import './Board.css';
-import {useState, useRef, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {calculateWinner,isBoardFull} from './IsWinner.js';
 import {Square} from './Square.js';
 import {Leaderboard} from './Leaderboard.js';
-
 import io from 'socket.io-client';
 const socket = io(); // Connects to socket connection
 export function Board(props) {
   const [board, setBoard] = useState(["", "", "", "", "", "", "", "", ""]); //sets board to empty array
   const [isX, setX] = useState(true); //useState for who's turn it is
-  
+  const [winner, setWinner] = useState({"Winner": "","Loser": "","Draw": []});
+  const [won, setWon]=useState(false);
 
   function onClickSquare(index) {
     if (canClickBoard()) { //if they're allowed to play
@@ -19,13 +19,18 @@ export function Board(props) {
         newBoard[index] = isX ? "X" : "O";
         setBoard(newBoard);
         setX(!isX);
+        if( (calculateWinner(newBoard)) || (isBoardFull(newBoard) && !calculateWinner(newBoard)) ){
+          console.log("SETWON");
+          setWon(true);
+          updateWinner(newBoard);
+        }
         socket.emit('board', {board: newBoard[index],index: index,isX: isX}); //send updated board, updated turn and index
       }
+      
     }
   }
 
   function canClickBoard() {
-    //const currUser = playerRef.current.value;
     if (props.players["Spectators"].includes(props.currUser)) { //if they are a spectator, can't click board
       return false;
     }
@@ -38,21 +43,39 @@ export function Board(props) {
       }
     }
   }
+  function updateWinner(board) {
+      var winnerCopy = {...winner};
+      if (isBoardFull(board) && !calculateWinner(board)) { //if it is a full board and no winner, it is a draw
+        winnerCopy["Draw"].push(props.players["PlayerX"]);
+        winnerCopy["Draw"].push(props.players["PlayerO"]);} 
+      else if (calculateWinner(board)) { //if there is a winner
+        if (calculateWinner(board) == "X") { //if the winner is player X, display message
+          winnerCopy["Winner"] = props.players["PlayerX"];
+          winnerCopy["Loser"] = props.players["PlayerO"];}
+        if (calculateWinner(board) == "O") { //if the winner is player O, display message
+          winnerCopy["Winner"] = props.players["PlayerO"];
+          winnerCopy["Loser"] = props.players["PlayerX"];}
+        }
+      setWinner(winnerCopy);
+      socket.emit('winner', { 'gameStat': winnerCopy } );
+     // console.log(winnerCopy);
+    }
 
   function displayWinner(board) {
-    var winner = "";
+    var result = "";
     if (isBoardFull(board) && !calculateWinner(board)) { //if it is a full board and no winner, it is a draw
-      winner = <div><p><b>It is a draw!</b></p></div>;
+      result = <div><p><b>It is a draw!</b></p></div>;
     } 
     else if (calculateWinner(board)) { //if there is a winner
       if (calculateWinner(board) == "X") { //if the winner is player X, display message
-        winner = <div> <p> The winner is <b>{props.players["PlayerX"]}</b>!</p></div>; 
+        result = <div> <p> The winner is <b>{props.players["PlayerX"]}</b>!</p></div>;
       }
       if (calculateWinner(board) == "O") { //if the winner is player O, display message
-        winner=<div><p><b>The winner is {props.players["PlayerO"]}</b>!</p></div>;}
+        result=<div><p><b>The winner is {props.players["PlayerO"]}</b>!</p></div>;
+      }
     }
-    if(winner){ //only display play again button if there is a winner or draw
-      return(<div class="players">{winner}<button class = "again" onClick = {resetBoard}>Play Again</button></div>);
+    if(result!=""){ //only display play again button if there is a winner or draw
+      return(<div class="players">{result}<button class = "again" onClick = {resetBoard}>Play Again</button></div>);
     }
   }
 
@@ -69,13 +92,20 @@ export function Board(props) {
       let newBoard = [...prevBoard];
       newBoard[data.index] = data.isX ? "X" : "O";
       setX(!data.isX);
-      return (newBoard)});
+      return (newBoard);
+      });
       console.log(data);
     });
     socket.on('resetBoard', (data) => {
       setBoard(data.board);
       setX(data.isX);
     });
+    socket.on('winner', (data) => {
+      console.log('Winner event received!');
+      setWinner(data);
+      console.log(data);
+    });
+      
     }, []);
 
   function displayPlayers() {
@@ -95,16 +125,16 @@ export function Board(props) {
         return (<div> 
                   <div class = "players">
                   <br/>
+                  {props.userList.map((user) => <div>{user}</div>)}
                    Welcome to Tic Tac Toe <b>{props.currUser}</b>
                   {playerBoardX}{playerBoardO}{playerBoardSpect} 
                   {isX ? 
                       <p> {props.players["PlayerX"]}'s turn</p>:
                       <p> {props.players["PlayerO"]}'s turn </p>} 
-                </div></div>);
+                </div></div>);}
       }
-      }
-    console.log(props.players);
     if (props.playerRef != null) {
+      //console.log("BEFORE RETURN");
       return (
       <div>
       {displayPlayers()} 

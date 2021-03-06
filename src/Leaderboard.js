@@ -1,5 +1,5 @@
 import React from 'react';
-export function Leaderboard(){
+export function Leaderboard(props){
     return(
     <div>
     <table>
@@ -10,7 +10,7 @@ export function Leaderboard(){
     </thead>
     <tbody>
         <tr>
-            <td>User 1</td>
+            <td>User1</td>
             <td>123</td>
         </tr>
     </tbody>
