@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { Board } from './Board.js';
 import {Login} from './Login.js';
-
+import {Leaderboard} from './Leaderboard.js';
 import { useState, useRef, useEffect } from 'react';  
 import io from 'socket.io-client';
 const socket = io(); // Connects to socket connection
@@ -13,6 +13,7 @@ const [currUser, setUser] = useState(""); //useState for the current username
 const playerRef = useRef(null); // references <input> element
 const [isLogged, setLog] = useState(false); //useState to check if user is logged in
 const [userList, setUserList] = useState([]);
+const [scoreList, setScoreList] = useState([]);
   function canLogIn(player){
     if(player!=""){ //if they entered something
       if(player==players["PlayerX"]){ //if they entered something that isn't the same as PlayerX
@@ -55,17 +56,18 @@ const [userList, setUserList] = useState([]);
       var newPlayer = {...data.players};
       setPlayers(newPlayer);
     });
-    socket.on('user_list', (data) => {
+    socket.on('leaderboard_info', (data) => {
       console.log('User list event received!');
       console.log(data);
       setUserList(data.users);
+      setScoreList(data.scores);
     });
     
     }, []);
   return (
     <div>
     <center>
-    {isLogged?<div><Board players={players} currUser={currUser} playerRef={playerRef} userList={userList}/></div>:<Login playerRef={playerRef} onClickLogin={onClickLogin}/>}
+    {isLogged?<div><Board players={players} currUser={currUser} playerRef={playerRef} /><Leaderboard userList={userList} scoreList={scoreList}/></div>:<Login playerRef={playerRef} onClickLogin={onClickLogin}/>}
     </center>
     </div>
   );

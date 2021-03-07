@@ -3,13 +3,12 @@ import './Board.css';
 import {useState, useEffect} from 'react';
 import {calculateWinner,isBoardFull} from './IsWinner.js';
 import {Square} from './Square.js';
-import {Leaderboard} from './Leaderboard.js';
 import io from 'socket.io-client';
 const socket = io(); // Connects to socket connection
 export function Board(props) {
   const [board, setBoard] = useState(["", "", "", "", "", "", "", "", ""]); //sets board to empty array
   const [isX, setX] = useState(true); //useState for who's turn it is
-  const [winner, setWinner] = useState({"Winner": "","Loser": "","Draw": []});
+  const [winner, setWinner] = useState({"Winner": "","Loser": ""});
   const [won, setWon]=useState(false);
 
   function onClickSquare(index) {
@@ -45,10 +44,7 @@ export function Board(props) {
   }
   function updateWinner(board) {
       var winnerCopy = {...winner};
-      if (isBoardFull(board) && !calculateWinner(board)) { //if it is a full board and no winner, it is a draw
-        winnerCopy["Draw"].push(props.players["PlayerX"]);
-        winnerCopy["Draw"].push(props.players["PlayerO"]);} 
-      else if (calculateWinner(board)) { //if there is a winner
+      if (calculateWinner(board)) { //if there is a winner
         if (calculateWinner(board) == "X") { //if the winner is player X, display message
           winnerCopy["Winner"] = props.players["PlayerX"];
           winnerCopy["Loser"] = props.players["PlayerO"];}
@@ -100,12 +96,6 @@ export function Board(props) {
       setBoard(data.board);
       setX(data.isX);
     });
-    socket.on('winner', (data) => {
-      console.log('Winner event received!');
-      setWinner(data);
-      console.log(data);
-    });
-      
     }, []);
 
   function displayPlayers() {
@@ -125,7 +115,6 @@ export function Board(props) {
         return (<div> 
                   <div class = "players">
                   <br/>
-                  {props.userList.map((user) => <div>{user}</div>)}
                    Welcome to Tic Tac Toe <b>{props.currUser}</b>
                   {playerBoardX}{playerBoardO}{playerBoardSpect} 
                   {isX ? 
@@ -148,5 +137,5 @@ export function Board(props) {
         <Square onClickSquare={onClickSquare} board={board} index={6} />
         <Square onClickSquare={onClickSquare} board={board} index={7} />
         <Square onClickSquare={onClickSquare} board={board} index={8} /> 
-     </div>{displayWinner(board)}<Leaderboard /></div>);
+     </div>{displayWinner(board)}</div>);
     }}

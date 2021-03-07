@@ -10,9 +10,14 @@ export function Leaderboard(props){
     </thead>
     <tbody>
         <tr>
-            <td>User1</td>
-            <td>123</td>
+            {props.userList.map((user) => <td>{user}</td>)}
+        </tr>
+        <tr>
+            {props.scoreList.map((score) => <td>{score}</td>)}
         </tr>
     </tbody>
-</table></div>);
+</table>
+
+
+</div>);
 }

@@ -21,18 +21,20 @@ socketio = SocketIO(app, cors_allowed_origins="*", json=json, manage_session=Fal
 @app.route("/<path:filename>")
 def index(filename):
     return send_from_directory("./build", filename)
-
+def calculateScores():
+    all_people = models.Leaderboard.query.order_by(models.Leaderboard.score).all()
+    print(all_people)
+    users = []
+    scores = []
+    print(all_people)
+    for person in all_people:
+        users.append(person.username)
+        scores.append(person.score)
+    return users,scores
 # When a client connects from this Socket connection, this function is run
 @socketio.on("connect")
 def on_connect():
     print("User connected!")
-    #all_people = models.Leaderboard.query.all()
-    #print(all_people)
-    #users = []
-    #for person in all_people:
-        #users.append(person.username)
-    #print(users)
-    #socketio.emit('user_list', {'users': users})
 
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on("disconnect")
@@ -62,12 +64,14 @@ def on_resetBoard(data):
 def on_win(data):
     print(str(data))
     if(data['gameStat']['Winner']!="" and data['gameStat']['Loser']!=""):
-        print("in if")
-        winner = models.Leaderboard.query.filter_by(username=data['gameStat']['Winner']).first()
-        print(winner)
+        winner = db.session.query(models.Leaderboard).filter_by(username=data['gameStat']['Winner']).first()
+        loser = db.session.query(models.Leaderboard).filter_by(username=data['gameStat']['Loser']).first()
         winner.score = winner.score + 1
+        loser.score = loser.score - 1
         db.session.commit()
-    socketio.emit("winner", data, broadcast=True, include_self=False)
+    users, scores = calculateScores()
+    socketio.emit('leaderboard_info', {'users': users, 'scores':scores})
+    #socketio.emit("winner", data, broadcast=True, include_self=False)
 @socketio.on('join')
 def on_join(data): # data is whatever arg you pass in your emit call on client
     print(str(data))
@@ -75,12 +79,8 @@ def on_join(data): # data is whatever arg you pass in your emit call on client
         new_user = models.Leaderboard(username=data['user'], score=100)
         db.session.add(new_user)
         db.session.commit()
-    all_people = models.Leaderboard.query.all()
-    users = []
-    print(all_people)
-    for person in all_people:
-        users.append(person.username)
-    socketio.emit('user_list', {'users': users})
+    users, scores = calculateScores()
+    socketio.emit('leaderboard_info', {'users': users, 'scores':scores})
 # Note we need to add this line so we can import app in the python shell
 if __name__ == "__main__":
     db.create_all()
