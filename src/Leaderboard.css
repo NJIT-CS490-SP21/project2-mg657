@@ -1,0 +1,23 @@
+table {
+  border-radius: 25px;
+  background-image: linear-gradient(to right, rgb(177, 91, 96), rgba(211, 161, 164, 1));
+  table-layout:fixed;
+  color: Lavender;
+	font-family: 'Trebuchet MS', sans-serif;
+}
+
+table, th, td {
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+  text-align: left;
+  
+}
+
+h2{
+  color: #B15B60;
+	font-family: 'Trebuchet MS', sans-serif;
+	font-size:1.2em;
+	font-weight:bold;
+}

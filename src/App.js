@@ -14,6 +14,7 @@ const playerRef = useRef(null); // references <input> element
 const [isLogged, setLog] = useState(false); //useState to check if user is logged in
 const [userList, setUserList] = useState([]);
 const [scoreList, setScoreList] = useState([]);
+const [isLeader, setLeader] = useState(false);
   function canLogIn(player){
     if(player!=""){ //if they entered something
       if(player==players["PlayerX"]){ //if they entered something that isn't the same as PlayerX
@@ -67,7 +68,10 @@ const [scoreList, setScoreList] = useState([]);
   return (
     <div>
     <center>
-    {isLogged?<div><Board players={players} currUser={currUser} playerRef={playerRef} /><Leaderboard userList={userList} scoreList={scoreList}/></div>:<Login playerRef={playerRef} onClickLogin={onClickLogin}/>}
+    {isLogged?<div class = "flex-container"><div class={isLeader?"displayLeaderboard":"displayLeaderboard2"}><Leaderboard userList={userList} scoreList={scoreList} currUser={currUser}/></div>
+    <div class="displayBoard"><Board players={players} currUser={currUser} playerRef={playerRef} /><br />
+    <button class="lead" onClick={() => setLeader(!isLeader)}>Leaderboard</button></div>
+    </div>:<Login playerRef={playerRef} onClickLogin={onClickLogin}/>}
     </center>
     </div>
   );

@@ -2,7 +2,7 @@
 	width: 350px; /*Total horizontal dimensions */
 	height: 350px; /*Total vertical dimensions */
 	margin: 0 auto;
-	background-color: #B15B60;
+	background-image: linear-gradient(to right, rgb(177, 91, 96), rgba(211, 161, 164, 1));
 	color: Lavender;
 	border: 6px solid #B15B60;
 	border-radius: 10px;
@@ -13,7 +13,7 @@
 }
 input[type="text"] {
 	height: 1.5rem;
-     font-family: 'Trebuchet MS', sans-serif;
+    font-family: 'Trebuchet MS', sans-serif;
     border: 0;
     outline: 0; 
     border-radius: .7rem;
@@ -33,15 +33,23 @@ input[type="text"] {
 
 .players{
 	color: #B15B60;
-	 font-family: 'Trebuchet MS', sans-serif;
+	font-family: 'Trebuchet MS', sans-serif;
+	
+}
+.welcome{
+	font-size:1.2em;
+	font-weight:normal;
 }
 button{
-	background-color: #B15B60;
+    background-color: #B15B60;
 	font-family: 'Trebuchet MS', sans-serif;
 	color: Lavender;
 	border: 0;
-  outline: 0; 
-  border-radius: .7rem;
-  font-size: 1em;
-  width:10%;
+	outline: 0; 
+	border-radius: .7rem;
+	font-size: 1em;
+	width:10%;
+}
+.again{
+	width:30%;
 }

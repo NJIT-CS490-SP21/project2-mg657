@@ -8,7 +8,7 @@ const socket = io(); // Connects to socket connection
 export function Board(props) {
   const [board, setBoard] = useState(["", "", "", "", "", "", "", "", ""]); //sets board to empty array
   const [isX, setX] = useState(true); //useState for who's turn it is
-  const [winner, setWinner] = useState({"Winner": "","Loser": ""});
+  const [winner, setWinner] = useState({"Winner": "","Loser": "", "Draw":[]});
   const [won, setWon]=useState(false);
 
   function onClickSquare(index) {
@@ -51,9 +51,9 @@ export function Board(props) {
         if (calculateWinner(board) == "O") { //if the winner is player O, display message
           winnerCopy["Winner"] = props.players["PlayerO"];
           winnerCopy["Loser"] = props.players["PlayerX"];}
+        setWinner(winnerCopy);
+        socket.emit('winner', { 'gameStat': winnerCopy } );
         }
-      setWinner(winnerCopy);
-      socket.emit('winner', { 'gameStat': winnerCopy } );
      // console.log(winnerCopy);
     }
 
@@ -115,7 +115,7 @@ export function Board(props) {
         return (<div> 
                   <div class = "players">
                   <br/>
-                   Welcome to Tic Tac Toe <b>{props.currUser}</b>
+                   <h2 class="welcome">Welcome to Tic Tac Toe <b>{props.currUser}</b></h2>
                   {playerBoardX}{playerBoardO}{playerBoardSpect} 
                   {isX ? 
                       <p> {props.players["PlayerX"]}'s turn</p>:

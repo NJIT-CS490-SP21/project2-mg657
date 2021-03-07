@@ -1,23 +1,35 @@
 import React from 'react';
+import './Leaderboard.css';
 export function Leaderboard(props){
+    const renderTable = props.userList.map((user, index) =>{
+        const scores = props.scoreList[index];
+        var tdUser = "";
+        var tdScore = "";
+        if(props.currUser == user){
+            tdUser = <td><b>{user}</b></td>;
+            tdScore = <td><b>{scores}</b></td>;
+        }
+        else{
+            tdUser = <td>{user}</td>;
+            tdScore = <td>{scores}</td>;
+        }
+        return(
+            <tr>{tdUser}{tdScore}</tr>);
+        
+    });
     return(
     <div>
-    <table>
+    <h2>Leaderboard</h2> 
+    <table id="t01">
     <thead>
         <tr>
-            <th colspan="2">Leaderboard</th>
+            <th>User</th>
+            <th>Score</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            {props.userList.map((user) => <td>{user}</td>)}
-        </tr>
-        <tr>
-            {props.scoreList.map((score) => <td>{score}</td>)}
-        </tr>
+        {renderTable}
     </tbody>
 </table>
-
-
 </div>);
 }

@@ -22,11 +22,10 @@ socketio = SocketIO(app, cors_allowed_origins="*", json=json, manage_session=Fal
 def index(filename):
     return send_from_directory("./build", filename)
 def calculateScores():
-    all_people = models.Leaderboard.query.order_by(models.Leaderboard.score).all()
+    all_people = models.Leaderboard.query.order_by(models.Leaderboard.score.desc()).all()
     print(all_people)
     users = []
     scores = []
-    print(all_people)
     for person in all_people:
         users.append(person.username)
         scores.append(person.score)
