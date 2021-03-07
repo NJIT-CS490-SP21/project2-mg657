@@ -40,9 +40,9 @@
 }
 .displayLeaderboard{
   display: inline-flex;
-
   position:absolute;
   left:0%;
+  top:8%;
   padding-left: 1em;
   
 }

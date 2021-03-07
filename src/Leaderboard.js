@@ -3,18 +3,18 @@ import './Leaderboard.css';
 export function Leaderboard(props){
     const renderTable = props.userList.map((user, index) =>{
         const scores = props.scoreList[index];
-        var tdUser = "";
-        var tdScore = "";
+        var tRow = "";
         if(props.currUser == user){
-            tdUser = <td><b>{user}</b></td>;
-            tdScore = <td><b>{scores}</b></td>;
+            tRow = "curr";
         }
         else{
-            tdUser = <td>{user}</td>;
-            tdScore = <td>{scores}</td>;
+            tRow = "";
         }
         return(
-            <tr>{tdUser}{tdScore}</tr>);
+            <tr class = {tRow}>
+            <td>{user}</td>
+            <td>{scores}</td>
+            </tr>);
         
     });
     return(

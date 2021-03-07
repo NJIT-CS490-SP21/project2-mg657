@@ -48,17 +48,17 @@ def on_chat(data):
     # the client that emmitted the event that triggered this function
     socketio.emit("board", data, broadcast=True, include_self=False)
 
-# when a client is able to log in, this function is run
-@socketio.on("login")
+# when a client is able to log in, this function is run to update the dictionary of players and spectators
+@socketio.on("send_players")
 def on_login(data):
     print(str(data))
-    socketio.emit("login", data, broadcast=True, include_self=False)
-
+    socketio.emit("send_players", data, broadcast=True, include_self=False)
 # when a client tries to reset the board, this function is run
 @socketio.on("resetBoard")
 def on_resetBoard(data):
     print(str(data))
     socketio.emit("resetBoard", data, broadcast=True, include_self=False)
+# When there is a winner, this function is run
 @socketio.on("winner")
 def on_win(data):
     print(str(data))
@@ -70,8 +70,8 @@ def on_win(data):
         db.session.commit()
     users, scores = calculateScores()
     socketio.emit('leaderboard_info', {'users': users, 'scores':scores})
-    #socketio.emit("winner", data, broadcast=True, include_self=False)
-@socketio.on('join')
+# When a user logs in, this function is run to update the database
+@socketio.on('login')
 def on_join(data): # data is whatever arg you pass in your emit call on client
     print(str(data))
     if(models.Leaderboard.query.filter_by(username=data['user']).first() is None):
@@ -84,7 +84,7 @@ def on_join(data): # data is whatever arg you pass in your emit call on client
 if __name__ == "__main__":
     db.create_all()
     import models
-# Note that we don't call app.run anymore. We call socketio.run with app arg
+# We call socketio.run with app arg
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),

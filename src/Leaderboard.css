@@ -1,5 +1,5 @@
 table {
-  border-radius: 25px;
+  border-radius: 10px;
   background-image: linear-gradient(to right, rgb(177, 91, 96), rgba(211, 161, 164, 1));
   table-layout:fixed;
   color: Lavender;
@@ -20,4 +20,8 @@ h2{
 	font-family: 'Trebuchet MS', sans-serif;
 	font-size:1.2em;
 	font-weight:bold;
+}
+.curr{
+  color: #B15B60;
+  background-image: linear-gradient(to right, rgba(195, 195, 249, 1), rgb(230,230,250));
 }

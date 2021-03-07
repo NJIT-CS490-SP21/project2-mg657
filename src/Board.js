@@ -25,7 +25,6 @@ export function Board(props) {
         }
         socket.emit('board', {board: newBoard[index],index: index,isX: isX}); //send updated board, updated turn and index
       }
-      
     }
   }
 
@@ -54,7 +53,6 @@ export function Board(props) {
         setWinner(winnerCopy);
         socket.emit('winner', { 'gameStat': winnerCopy } );
         }
-     // console.log(winnerCopy);
     }
 
   function displayWinner(board) {
@@ -123,7 +121,6 @@ export function Board(props) {
                 </div></div>);}
       }
     if (props.playerRef != null) {
-      //console.log("BEFORE RETURN");
       return (
       <div>
       {displayPlayers()} 

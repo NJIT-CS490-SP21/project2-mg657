@@ -46,13 +46,13 @@ const [isLeader, setLeader] = useState(false);
       else if (playerCopy["PlayerX"] != "" && playerCopy["PlayerO"] == "") { //if there is a playerX and no playerO, set to playerO
         playerCopy["PlayerO"] = player;}
       setPlayers(playerCopy);
-      socket.emit('login', {players: playerCopy}); //send the dictionary over channel
-      socket.emit('join', { 'user': player });
+      socket.emit('send_players', {players: playerCopy}); //send the dictionary over channel
+      socket.emit('login', { 'user': player}); //send the user to add to database
     }
     
   }
   useEffect(() => {// listens for event emitted by server, if received, run code for corresponding channel
-    socket.on('login', (data) => {
+    socket.on('send_players', (data) => {
       console.log('Login event received!');
       var newPlayer = {...data.players};
       setPlayers(newPlayer);
