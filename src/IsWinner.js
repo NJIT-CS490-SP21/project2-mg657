@@ -10,7 +10,7 @@ export function calculateWinner(squares) {
     [0, 4, 8],
     [2, 4, 6]
   ];
-  // go over all possibly winning lines and check if they consist of only X's/only O's
+  // Run through all possible winning lines, check if they consist of only X's/only O's
   for (let i = 0; i < possibleLines.length; i++) {
     const [a, b, c] = possibleLines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {

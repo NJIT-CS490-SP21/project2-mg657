@@ -5,11 +5,11 @@ import {calculateWinner,isBoardFull} from './IsWinner.js';
 import {Square} from './Square.js';
 import io from 'socket.io-client';
 const socket = io(); // Connects to socket connection
+export default socket;
 export function Board(props) {
   const [board, setBoard] = useState(["", "", "", "", "", "", "", "", ""]); //sets board to empty array
   const [isX, setX] = useState(true); //useState for who's turn it is
-  const [winner, setWinner] = useState({"Winner": "","Loser": "", "Draw":[]});
-  const [won, setWon]=useState(false);
+  const [winner, setWinner] = useState({"Winner": "","Loser": ""}); //
 
   function onClickSquare(index) {
     if (canClickBoard()) { //if they're allowed to play
@@ -18,9 +18,7 @@ export function Board(props) {
         newBoard[index] = isX ? "X" : "O";
         setBoard(newBoard);
         setX(!isX);
-        if( (calculateWinner(newBoard)) || (isBoardFull(newBoard) && !calculateWinner(newBoard)) ){
-          console.log("SETWON");
-          setWon(true);
+        if((calculateWinner(newBoard))){
           updateWinner(newBoard);
         }
         socket.emit('board', {board: newBoard[index],index: index,isX: isX}); //send updated board, updated turn and index
@@ -43,16 +41,14 @@ export function Board(props) {
   }
   function updateWinner(board) {
       var winnerCopy = {...winner};
-      if (calculateWinner(board)) { //if there is a winner
-        if (calculateWinner(board) == "X") { //if the winner is player X, display message
-          winnerCopy["Winner"] = props.players["PlayerX"];
-          winnerCopy["Loser"] = props.players["PlayerO"];}
-        if (calculateWinner(board) == "O") { //if the winner is player O, display message
-          winnerCopy["Winner"] = props.players["PlayerO"];
-          winnerCopy["Loser"] = props.players["PlayerX"];}
-        setWinner(winnerCopy);
-        socket.emit('winner', { 'gameStat': winnerCopy } );
-        }
+      if (calculateWinner(board) == "X") { //if the winner is player X, add X as winner, O as loser
+        winnerCopy["Winner"] = props.players["PlayerX"];
+        winnerCopy["Loser"] = props.players["PlayerO"];}
+      if (calculateWinner(board) == "O") { //if the winner is player O, add O as winner, X as loser
+        winnerCopy["Winner"] = props.players["PlayerO"];
+        winnerCopy["Loser"] = props.players["PlayerX"];}
+      setWinner(winnerCopy);
+      socket.emit('winner', { 'gameStat': winnerCopy });
     }
 
   function displayWinner(board) {

@@ -1,11 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
 import { Board } from './Board.js';
+import socket from './Board.js';
 import {Login} from './Login.js';
 import {Leaderboard} from './Leaderboard.js';
 import { useState, useRef, useEffect } from 'react';  
-import io from 'socket.io-client';
-const socket = io(); // Connects to socket connection
 
 function App() {
 const [players, setPlayers] = useState({"PlayerX": "","PlayerO": "","Spectators": []}); // set empty dict to keep track of players
@@ -54,6 +53,7 @@ const [isLeader, setLeader] = useState(false);
   useEffect(() => {// listens for event emitted by server, if received, run code for corresponding channel
     socket.on('send_players', (data) => {
       console.log('Login event received!');
+      console.log(data);
       var newPlayer = {...data.players};
       setPlayers(newPlayer);
     });
@@ -68,10 +68,15 @@ const [isLeader, setLeader] = useState(false);
   return (
     <div>
     <center>
-    {isLogged?<div class = "flex-container"><div class={isLeader?"displayLeaderboard":"displayLeaderboard2"}><Leaderboard userList={userList} scoreList={scoreList} currUser={currUser}/></div>
-    <div class="displayBoard"><Board players={players} currUser={currUser} playerRef={playerRef} /><br />
-    <button class="lead" onClick={() => setLeader(!isLeader)}>Leaderboard</button></div>
-    </div>:<Login playerRef={playerRef} onClickLogin={onClickLogin}/>}
+      {isLogged?
+      <div class = "flex-container">
+        <div class="displayBoard"><Board players={players} currUser={currUser} playerRef={playerRef} /><br />
+        <button class="lead" onClick={() => setLeader(!isLeader)}>Leaderboard</button>
+        <div class={isLeader?"displayLeaderboard":"displayLeaderboard2"}>
+        <Leaderboard userList={userList} scoreList={scoreList} currUser={currUser}/>
+      </div>
+        </div>
+      </div>:<Login playerRef={playerRef} onClickLogin={onClickLogin}/>}
     </center>
     </div>
   );
