@@ -1,19 +1,18 @@
-button{
-	background-color: #B15B60;
-	 font-family: 'Trebuchet MS', sans-serif;
-	color: Lavender;
-	border: 0;
-    outline: 0; 
-    border-radius: .7rem;
-    font-size: 1em;
-    width:10%;
-	
+button {
+  background-color: #b15b60;
+  font-family: "Trebuchet MS", sans-serif;
+  color: Lavender;
+  border: 0;
+  outline: 0;
+  border-radius: 0.7rem;
+  font-size: 1em;
+  width: 10%;
 }
-.submit{
-	width:7%;
+.submit {
+  width: 7%;
 }
-.login{
-    font-family: 'Courier New', monospace;
-    font-size:1.7em;
-    color: #B15B60;
+.login {
+  font-family: "Courier New", monospace;
+  font-size: 1.7em;
+  color: #b15b60;
 }

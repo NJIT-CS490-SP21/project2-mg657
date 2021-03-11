@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 export function calculateWinner(squares) {
   const possibleLines = [
     [0, 1, 2],
@@ -8,7 +8,7 @@ export function calculateWinner(squares) {
     [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
-    [2, 4, 6]
+    [2, 4, 6],
   ];
   // Run through all possible winning lines, check if they consist of only X's/only O's
   for (let i = 0; i < possibleLines.length; i++) {
@@ -20,8 +20,10 @@ export function calculateWinner(squares) {
   return null;
 }
 export function isBoardFull(squares) {
-      for (let i = 0; i < squares.length; i++) {
-        if (squares[i] == "") {
-          return false;}
-      }
-      return true;}
+  for (let i = 0; i < squares.length; i++) {
+    if (squares[i] == "") {
+      return false;
+    }
+  }
+  return true;
+}

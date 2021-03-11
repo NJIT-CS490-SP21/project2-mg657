@@ -1,55 +1,63 @@
 .board {
-	width: 350px; /*Total horizontal dimensions */
-	height: 350px; /*Total vertical dimensions */
-	margin: 0 auto;
-	background-image: linear-gradient(to right, rgb(177, 91, 96), rgba(211, 161, 164, 1));
-	color: Lavender;
-	border: 6px solid #B15B60;
-	border-radius: 10px;
-	display: grid; /*Enables CSS Grid */
-	grid-template-columns: repeat(3, 1fr); /* Total horizontal space broken into 3 columns */
-	grid-template-rows: repeat(3, 1fr);  /*Total vertical space broken into 3 rows */
-	
+  width: 350px; /*Total horizontal dimensions */
+  height: 350px; /*Total vertical dimensions */
+  margin: 0 auto;
+  background-image: linear-gradient(
+    to right,
+    rgb(177, 91, 96),
+    rgba(211, 161, 164, 1)
+  );
+  color: Lavender;
+  border: 6px solid #b15b60;
+  border-radius: 10px;
+  display: grid; /*Enables CSS Grid */
+  grid-template-columns: repeat(
+    3,
+    1fr
+  ); /* Total horizontal space broken into 3 columns */
+  grid-template-rows: repeat(
+    3,
+    1fr
+  ); /*Total vertical space broken into 3 rows */
 }
 input[type="text"] {
-	height: 1.5rem;
-    font-family: 'Trebuchet MS', sans-serif;
-    border: 0;
-    outline: 0; 
-    border-radius: .7rem;
-    appearance: none;
-    z-index: 1;
-    position: relative;
-    color: #B15B60;
-    font-size: 1.2rem;
-    width: 20%;
-    background: Lavender;
+  height: 1.5rem;
+  font-family: "Trebuchet MS", sans-serif;
+  border: 0;
+  outline: 0;
+  border-radius: 0.7rem;
+  appearance: none;
+  z-index: 1;
+  position: relative;
+  color: #b15b60;
+  font-size: 1.2rem;
+  width: 20%;
+  background: Lavender;
 }
 ::placeholder {
   color: #989898;
-  font-size:0.9em;
+  font-size: 0.9em;
   opacity: 1; /* Firefox */
 }
 
-.players{
-	color: #B15B60;
-	font-family: 'Trebuchet MS', sans-serif;
-	
+.players {
+  color: #b15b60;
+  font-family: "Trebuchet MS", sans-serif;
 }
-.welcome{
-	font-size:1.2em;
-	font-weight:normal;
+.welcome {
+  font-size: 1.2em;
+  font-weight: normal;
 }
-button{
-    background-color: #B15B60;
-	font-family: 'Trebuchet MS', sans-serif;
-	color: Lavender;
-	border: 0;
-	outline: 0; 
-	border-radius: .7rem;
-	font-size: 1em;
-	width:10%;
+button {
+  background-color: #b15b60;
+  font-family: "Trebuchet MS", sans-serif;
+  color: Lavender;
+  border: 0;
+  outline: 0;
+  border-radius: 0.7rem;
+  font-size: 1em;
+  width: 10%;
 }
-.again{
-	width:30%;
+.again {
+  width: 30%;
 }

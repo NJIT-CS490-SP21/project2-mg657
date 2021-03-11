@@ -30,34 +30,32 @@
 }
 .flex-container {
   display: inline-flex;
-  justify-content:center;
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   flex-direction: row;
-    
 }
-.displayBoard{
-  width:100%;
+.displayBoard {
+  width: 100%;
 }
-.displayLeaderboard{
+.displayLeaderboard {
   display: inline-flex;
-  position:absolute;
-  left:0%;
-  top:8%;
+  position: absolute;
+  left: 0%;
+  top: 8%;
   padding-left: 1em;
-  
 }
-.displayLeaderboard2{
-  display:none;
+.displayLeaderboard2 {
+  display: none;
 }
-.lead{
-  background-color: #B15B60;
-	font-family: 'Trebuchet MS', sans-serif;
-	color: Lavender;
-	border: 0;
-  outline: 0; 
-  border-radius: .7rem;
+.lead {
+  background-color: #b15b60;
+  font-family: "Trebuchet MS", sans-serif;
+  color: Lavender;
+  border: 0;
+  outline: 0;
+  border-radius: 0.7rem;
   font-size: 1em;
-  width:30%;
+  width: 30%;
 }
 @keyframes App-logo-spin {
   from {

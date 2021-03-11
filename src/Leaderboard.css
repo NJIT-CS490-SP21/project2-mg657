@@ -1,27 +1,37 @@
 table {
   border-radius: 10px;
-  background-image: linear-gradient(to right, rgb(177, 91, 96), rgba(211, 161, 164, 1));
-  table-layout:fixed;
+  background-image: linear-gradient(
+    to right,
+    rgb(177, 91, 96),
+    rgba(211, 161, 164, 1)
+  );
+  table-layout: fixed;
   color: Lavender;
-	font-family: 'Trebuchet MS', sans-serif;
+  font-family: "Trebuchet MS", sans-serif;
 }
 
-table, th, td {
+table,
+th,
+td {
   border-collapse: collapse;
 }
-th, td {
+th,
+td {
   padding: 15px;
   text-align: left;
-  
 }
 
-h2{
-  color: #B15B60;
-	font-family: 'Trebuchet MS', sans-serif;
-	font-size:1.2em;
-	font-weight:bold;
+h2 {
+  color: #b15b60;
+  font-family: "Trebuchet MS", sans-serif;
+  font-size: 1.2em;
+  font-weight: bold;
 }
-.curr{
-  color: #B15B60;
-  background-image: linear-gradient(to right, rgba(195, 195, 249, 1), rgb(230,230,250));
+.curr {
+  color: #b15b60;
+  background-image: linear-gradient(
+    to right,
+    rgba(195, 195, 249, 1),
+    rgb(230, 230, 250)
+  );
 }
