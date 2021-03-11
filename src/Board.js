@@ -9,7 +9,6 @@ export default socket;
 export function Board(props) {
   const [board, setBoard] = useState(["", "", "", "", "", "", "", "", ""]); //sets board to empty array
   const [isX, setX] = useState(true); //useState for who's turn it is
-  const [winner, setWinner] = useState({"Winner": "","Loser": ""}); //
 
   function onClickSquare(index) {
     if (canClickBoard()) { //if they're allowed to play
@@ -40,15 +39,12 @@ export function Board(props) {
     }
   }
   function updateWinner(board) {
-      var winnerCopy = {...winner};
       if (calculateWinner(board) == "X") { //if the winner is player X, add X as winner, O as loser
-        winnerCopy["Winner"] = props.players["PlayerX"];
-        winnerCopy["Loser"] = props.players["PlayerO"];}
-      if (calculateWinner(board) == "O") { //if the winner is player O, add O as winner, X as loser
-        winnerCopy["Winner"] = props.players["PlayerO"];
-        winnerCopy["Loser"] = props.players["PlayerX"];}
-      setWinner(winnerCopy);
-      socket.emit('winner', { 'gameStat': winnerCopy });
+        socket.emit('winner', { 'winner': props.players["PlayerX"], 'loser': props.players["PlayerO"] });
+      }
+      else if (calculateWinner(board) == "O") { //if the winner is player O, add O as winner, X as loser
+        socket.emit('winner', { 'winner': props.players["PlayerO"], 'loser': props.players["PlayerX"] });
+      }
     }
 
   function displayWinner(board) {

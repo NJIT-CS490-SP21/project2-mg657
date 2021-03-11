@@ -43,11 +43,6 @@ def on_chat(data):
     # the client that emmitted the event that triggered this function
     socketio.emit("board", data, broadcast=True, include_self=False)
 
-# When a client is able to log in, this function is run to update the dictionary of players and spectators
-@socketio.on("send_players")
-def on_login(data):
-    print(str(data))
-    socketio.emit("send_players", data, broadcast=True, include_self=False)
 
 # When a client tries to reset the board, this function is run
 @socketio.on("resetBoard")
@@ -59,15 +54,20 @@ def on_resetBoard(data):
 @socketio.on("winner")
 def on_win(data):
     print(str(data))
-    if(data['gameStat']['Winner']!="" and data['gameStat']['Loser']!=""):
-        winner = db.session.query(models.Leaderboard).filter_by(username=data['gameStat']['Winner']).first()
-        loser = db.session.query(models.Leaderboard).filter_by(username=data['gameStat']['Loser']).first()
+    if(data['winner']!="" and data['loser']!=""):
+        winner = db.session.query(models.Leaderboard).filter_by(username=data['winner']).first()
+        loser = db.session.query(models.Leaderboard).filter_by(username=data['loser']).first()
         winner.score = winner.score + 1
         loser.score = loser.score - 1
         db.session.commit()
     users, scores = calculateScores()
     socketio.emit('leaderboard_info', {'users': users, 'scores':scores})
 
+# When a client is able to log in, this function is run to update the dictionary of players and spectators
+@socketio.on("send_players")
+def on_login(data):
+    print(str(data))
+    socketio.emit("send_players", data, broadcast=True, include_self=False)
 # When a user logs in, this function is run to update the database
 @socketio.on('login')
 def on_join(data): # data is whatever arg you pass in your emit call on client
