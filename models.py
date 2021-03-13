@@ -1,5 +1,6 @@
 from app import db
 
+
 class Leaderboard(db.Model):
     username = db.Column(db.String(80), unique=True, primary_key=True)
     score = db.Column(db.Integer, nullable=False)
