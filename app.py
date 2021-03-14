@@ -93,8 +93,7 @@ def on_win(data):
 @socketio.on('login')
 def on_join(data):  # data is whatever arg you pass in your emit call on client
     print(str(data))
-    if (models.Leaderboard.query.filter_by(username=data['user']).first() is
-            None):
+    if (models.Leaderboard.query.filter_by(username=data['user']).first() is None):
         new_user = models.Leaderboard(username=data['user'], score=100)
         db.session.add(new_user)
         db.session.commit()

@@ -38,6 +38,6 @@ export function Leaderboard(props) {
 Leaderboard.propTypes = {
   currUser: PropTypes.string.isRequired,
   userList: PropTypes.arrayOf(PropTypes.string).isRequired,
-  scoreList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  scoreList: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 export default Leaderboard;

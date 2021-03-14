@@ -7,12 +7,12 @@ export function Square(props) {
   return (
     <div
       role="button"
-      tabIndex="0"
+      tabIndex={0}
       className="box"
       onClick={() => {
         onClickSquare(index);
       }}
-      onKeyDown={() => {
+      onKeyPress={() => {
         onClickSquare(index);
       }}
 

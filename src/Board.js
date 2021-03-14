@@ -38,7 +38,7 @@ export function Board(props) {
               {' '}
               The winner is
               {' '}
-              <b>{props.players.PlayerX}</b>
+              <b>{players.PlayerX}</b>
               !
             </p>
           </div>
@@ -48,11 +48,12 @@ export function Board(props) {
         // if the winner is player O, display message
         result = (
           <div>
+            {' '}
             <p>
-              <b>
-                The winner is
-                {props.players.PlayerO}
-              </b>
+              {' '}
+              The winner is
+              {' '}
+              <b>{players.PlayerO}</b>
               !
             </p>
           </div>
@@ -70,10 +71,10 @@ export function Board(props) {
         </div>
       );
     }
-    return <div />;
+    return false;
   }
   function canClickBoard() {
-    if (props.players.Spectators.includes(props.currUser)) {
+    if (players.Spectators.includes(currUser)) {
       // if they are a spectator, can't click board
       return false;
     }
@@ -81,12 +82,9 @@ export function Board(props) {
       // once there is a winner, can't click board
       return false;
     }
-    if (props.players.PlayerX !== '' && props.players.PlayerO !== '') {
+    if (players.PlayerX !== '' && players.PlayerO !== '') {
       // only if there are two players logged in
-      if (
-        (isX && props.currUser === props.players.PlayerX)
-        || (!isX && props.currUser === props.players.PlayerO)
-      ) {
+      if ((isX && currUser === players.PlayerX) || (!isX && currUser === players.PlayerO)) {
         // and it is current users turn, can click board
         return true;
       }
@@ -97,14 +95,14 @@ export function Board(props) {
     if (calculateWinner(currBoard) === 'X') {
       // if the winner is player X, add X as winner, O as loser
       socket.emit('winner', {
-        winner: props.players.PlayerX,
-        loser: props.players.PlayerO,
+        winner: players.PlayerX,
+        loser: players.PlayerO,
       });
     } else if (calculateWinner(currBoard) === 'O') {
       // if the winner is player O, add O as winner, X as loser
       socket.emit('winner', {
-        winner: props.players.PlayerO,
-        loser: props.players.PlayerX,
+        winner: players.PlayerO,
+        loser: players.PlayerX,
       });
     }
   }
@@ -152,32 +150,32 @@ export function Board(props) {
     let playerBoardX = '';
     let playerBoardO = '';
     let playerBoardSpect = '';
-    if (props.players.PlayerX !== '') {
+    if (players.PlayerX !== '') {
       // only shows users who have logged in
       playerBoardX = (
         <div>
           <p>
             Player X:
-            {props.players.PlayerX}
+            {players.PlayerX}
           </p>
         </div>
       );
-      if (props.players.PlayerO !== '') {
+      if (players.PlayerO !== '') {
         playerBoardO = (
           <div>
             <p>
               Player O:
-              {props.players.PlayerO}
+              {players.PlayerO}
             </p>
           </div>
         );
-        if (props.players.Spectators !== '') {
+        if (players.Spectators !== '') {
           playerBoardSpect = (
             <div>
               <p>
                 Spectators:
                 {' '}
-                {props.players.Spectators.map((item) => (
+                {players.Spectators.map((item) => (
                   <div>{item}</div>
                 ))}
               </p>
@@ -187,9 +185,9 @@ export function Board(props) {
       }
     }
     if (
-      props.players.PlayerX !== ''
-      || props.players.PlayerO !== ''
-      || props.players.Spectators !== ''
+      players.PlayerX !== ''
+      || players.PlayerO !== ''
+      || players.Spectators !== ''
     ) {
       return (
         <div>
@@ -207,13 +205,13 @@ export function Board(props) {
               <p>
                 {' '}
                 {players.PlayerX}
-                `&apos;`s turn
+                &apos;s turn
               </p>
             ) : (
               <p>
                 {' '}
                 {players.PlayerO}
-                `&apos;`s turn
+                &apos;s turn
                 {' '}
               </p>
             )}
