@@ -3,6 +3,7 @@ This file sets up the database used for the leaderboard
 """
 from app import db
 
+
 class Leaderboard(db.Model):
     """
     Creates column for username with primary key, unique attribute

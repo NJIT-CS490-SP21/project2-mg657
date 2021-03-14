@@ -37,7 +37,6 @@ export function Board(props) {
             <p>
               {' '}
               The winner is
-              {' '}
               <b>{players.PlayerX}</b>
               !
             </p>
@@ -52,7 +51,6 @@ export function Board(props) {
             <p>
               {' '}
               The winner is
-              {' '}
               <b>{players.PlayerO}</b>
               !
             </p>
@@ -84,7 +82,10 @@ export function Board(props) {
     }
     if (players.PlayerX !== '' && players.PlayerO !== '') {
       // only if there are two players logged in
-      if ((isX && currUser === players.PlayerX) || (!isX && currUser === players.PlayerO)) {
+      if (
+        (isX && currUser === players.PlayerX)
+        || (!isX && currUser === players.PlayerO)
+      ) {
         // and it is current users turn, can click board
         return true;
       }

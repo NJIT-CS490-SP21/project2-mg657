@@ -23,10 +23,12 @@ function App() {
       if (player === players.PlayerX) {
         // if they entered something that isn't the same as PlayerX
         return false;
-      } if (player === players.PlayerO) {
+      }
+      if (player === players.PlayerO) {
         // if they entered something that isn't the same as PlayerO
         return false;
-      } if (players.Spectators.includes(player)) {
+      }
+      if (players.Spectators.includes(player)) {
         // if they entered something that isn't the same as a spectator
         return false;
       }
@@ -83,11 +85,17 @@ function App() {
                 playerRef={playerRef}
               />
               <br />
-              <button type="button" className="lead" onClick={() => setLeader(!isLeader)}>
+              <button
+                type="button"
+                className="lead"
+                onClick={() => setLeader(!isLeader)}
+              >
                 Leaderboard
               </button>
               <div
-                className={isLeader ? 'displayLeaderboard' : 'displayLeaderboard2'}
+                className={
+                  isLeader ? 'displayLeaderboard' : 'displayLeaderboard2'
+                }
               >
                 <Leaderboard
                   userList={userList}

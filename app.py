@@ -7,6 +7,7 @@ from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
+
 load_dotenv(find_dotenv())  # This is to load your env variables from .env
 app = Flask(
     __name__,
@@ -30,6 +31,7 @@ def index(filename):
     """
     return send_from_directory("./build", filename)
 
+
 def calculate_scores():
     """
     This orders all the of the scores from highest to lowest,
@@ -45,6 +47,7 @@ def calculate_scores():
         scores.append(person.score)
     return users, scores
 
+
 @socketio.on("connect")
 def on_connect():
     """
@@ -52,12 +55,14 @@ def on_connect():
     """
     print("User connected!")
 
+
 @socketio.on("disconnect")
 def on_disconnect():
     """
     When a client disconnects from this Socket connection, this function is run
     """
     print("User disconnected!")
+
 
 @socketio.on("board")
 def on_chat(data):
@@ -69,6 +74,7 @@ def on_chat(data):
     print(str(data))
     socketio.emit("board", data, broadcast=True, include_self=False)
 
+
 @socketio.on("send_players")
 def on_login(data):
     """
@@ -78,6 +84,7 @@ def on_login(data):
     print(str(data))
     socketio.emit("send_players", data, broadcast=True, include_self=False)
 
+
 @socketio.on("resetBoard")
 def on_reset_board(data):
     """
@@ -86,6 +93,7 @@ def on_reset_board(data):
     """
     print(str(data))
     socketio.emit("resetBoard", data, broadcast=True, include_self=False)
+
 
 @socketio.on("winner")
 def on_win(data):
@@ -107,6 +115,7 @@ def on_win(data):
     users, scores = calculate_scores()
     socketio.emit('leaderboard_info', {'users': users, 'scores': scores})
 
+
 @socketio.on('login')
 def on_join(data):
     """
@@ -115,7 +124,8 @@ def on_join(data):
     The updated lists are sent back
     """
     print(str(data))
-    if models.Leaderboard.query.filter_by(username=data['user']).first() is None:
+    if models.Leaderboard.query.filter_by(
+            username=data['user']).first() is None:
         new_user = models.Leaderboard(username=data['user'], score=100)
         db.session.add(new_user)
         db.session.commit()

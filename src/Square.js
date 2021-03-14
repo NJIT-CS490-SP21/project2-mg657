@@ -15,7 +15,6 @@ export function Square(props) {
       onKeyPress={() => {
         onClickSquare(index);
       }}
-
     >
       {board[index]}
     </div>
