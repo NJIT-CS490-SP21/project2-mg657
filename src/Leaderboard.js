@@ -1,11 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Leaderboard.css';
 
 export function Leaderboard(props) {
-  const renderTable = props.userList.map((user, index) => {
-    const scores = props.scoreList[index];
+  const { userList, scoreList, currUser } = props;
+  const renderTable = userList.map((user, index) => {
+    const scores = scoreList[index];
     let tRow = '';
-    if (props.currUser === user) {
+    if (currUser === user) {
       tRow = 'curr';
     } else {
       tRow = '';
@@ -32,3 +34,10 @@ export function Leaderboard(props) {
     </div>
   );
 }
+
+Leaderboard.propTypes = {
+  currUser: PropTypes.string.isRequired,
+  userList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  scoreList: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+export default Leaderboard;

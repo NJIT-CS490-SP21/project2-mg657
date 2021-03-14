@@ -1,14 +1,29 @@
-import React from "react";
-import "./Square.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import './Square.css';
+
 export function Square(props) {
+  const { onClickSquare, board, index } = props;
   return (
     <div
-      class="box"
+      role="button"
+      tabIndex="0"
+      className="box"
       onClick={() => {
-        props.onClickSquare(props.index);
+        onClickSquare(index);
       }}
+      onKeyDown={() => {
+        onClickSquare(index);
+      }}
+
     >
-      {props.board[props.index]}
+      {board[index]}
     </div>
   );
 }
+Square.propTypes = {
+  onClickSquare: PropTypes.func.isRequired,
+  board: PropTypes.arrayOf(PropTypes.string).isRequired,
+  index: PropTypes.number.isRequired,
+};
+export default Square;
