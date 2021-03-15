@@ -139,7 +139,6 @@ export function Board(props) {
         setX(!data.isX);
         return newBoard;
       });
-      console.log(data);
     });
     socket.on('resetBoard', (data) => {
       setBoard(data.board);
@@ -226,7 +225,7 @@ export function Board(props) {
     return (
       <div>
         {displayPlayers()}
-        <div className="board">
+        <div data-testid="board-element" className="board">
           <Square onClickSquare={onClickSquare} board={board} index={0} />
           <Square onClickSquare={onClickSquare} board={board} index={1} />
           <Square onClickSquare={onClickSquare} board={board} index={2} />

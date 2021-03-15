@@ -47,7 +47,7 @@ class AddUserTestCase(unittest.TestCase):
     def mocked_person_query_all(self):
         return self.initial_db_mock
     
-    def add_user_test_success(self):
+    def test_user_success(self):
         for test in self.success_test_params:
             with patch('app.db.session.add', self.mocked_db_session_add):
                 with patch('app.db.session.commit', self.mocked_db_session_commit):
@@ -68,18 +68,41 @@ class UpdateScoreTestCase(unittest.TestCase):
                 WINNER_INPUT: 'mahi',
                 LOSER_INPUT: 'manchi',
                 KEY_EXPECTED: {
-                    'mahi': INITIAL_SCORE+1,
-                    'manchi': INITIAL_SCORE-1,
+                    'mahi': INITIAL_SCORE+4,
+                    'manchi': INITIAL_SCORE-4,
                 },
             },
         ]
-        
-        
+        self.failure_test_params = [
+            {
+                WINNER_INPUT: 'mahi',
+                LOSER_INPUT: 'manchi',
+                KEY_EXPECTED: {
+                    'mahi': INITIAL_SCORE-1,
+                    'manchi': INITIAL_SCORE+1,
+                },
+            },
+            {
+                WINNER_INPUT: 'mahi',
+                LOSER_INPUT: 'manchi',
+                KEY_EXPECTED: {
+                    'mahi': INITIAL_SCORE+2,
+                    'manchi': INITIAL_SCORE+2,
+                },
+            },
+            {
+                WINNER_INPUT: 'mahi',
+                LOSER_INPUT: 'manchi',
+                KEY_EXPECTED: {
+                    'mahi': INITIAL_SCORE-3,
+                    'manchi': INITIAL_SCORE-3,
+                },
+            },
+        ]
         winner = models.Leaderboard(username='mahi', score=INITIAL_SCORE)
         loser = models.Leaderboard(username='manchi', score=INITIAL_SCORE)
         self.initial_db_mock = [winner, loser]
-        self.initial_db_mock_score = [winner.score, loser.score]
-    
+        
     def mocked_db_session_add(self, username):
         self.initial_db_mock.append(username)
     
@@ -89,22 +112,37 @@ class UpdateScoreTestCase(unittest.TestCase):
     def mocked_person_query_all(self):
         return self.initial_db_mock
     
-    def update_score_test_success(self):
+    def test_user_success(self):
         for test in self.success_test_params:
             with patch('app.db.session.add', self.mocked_db_session_add):
                 with patch('app.db.session.commit', self.mocked_db_session_commit):
-                   # with patch('models.Leaderboard.query') as mocked_query:
-                       # mocked_query.all = self.mocked_person_query_all
-                    print(self.initial_db_mock)
-                    print(self.initial_db_mock_score)
-                    actual_result = update_score_db(test[WINNER_INPUT], test[LOSER_INPUT])
-                    print(actual_result)
-                    expected_result = test[KEY_EXPECTED]
-                    print(self.initial_db_mock)
-                    print(expected_result)
-                    self.assertEqual(len(actual_result), len(expected_result))
-                    self.assertEqual(actual_result, expected_result)
-                        #self.assertEqual(actual_result[1], expected_result[1])
+                    with patch('models.Leaderboard.query') as mocked_query:
+                        mocked_query.all = self.mocked_person_query_all
+                        print(self.initial_db_mock)
+                        actual_result = update_score_db(test[WINNER_INPUT], test[LOSER_INPUT])
+                        print("ACTUAL:")
+                        print(actual_result)
+                        expected_result = test[KEY_EXPECTED]
+                        print(self.initial_db_mock)
+                        print("EXPECTED:")
+                        print(expected_result)
+                        self.assertEqual(len(actual_result), len(expected_result))
+                        self.assertEqual(actual_result, expected_result)
+    def test_user_failure(self):
+        for test in self.failure_test_params:
+            with patch('app.db.session.add', self.mocked_db_session_add):
+                with patch('app.db.session.commit', self.mocked_db_session_commit):
+                    with patch('models.Leaderboard.query') as mocked_query:
+                        mocked_query.all = self.mocked_person_query_all
+                        print(self.initial_db_mock)
+                        actual_result = update_score_db(test[WINNER_INPUT], test[LOSER_INPUT])
+                        print("ACTUAL:")
+                        print(actual_result)
+                        expected_result = test[KEY_EXPECTED]
+                        print(self.initial_db_mock)
+                        print("EXPECTED:")
+                        print(expected_result)
+                        self.assertNotEqual(actual_result, expected_result)
 
 
 

@@ -13,7 +13,7 @@ export function Leaderboard(props) {
       tRow = '';
     }
     return (
-      <tr className={tRow}>
+      <tr data-testid="tr-user" className={tRow}>
         <td>{user}</td>
         <td>{scores}</td>
       </tr>

@@ -2,8 +2,8 @@ import unittest
 import os
 import sys
 sys.path.append(os.path.abspath('../../'))
-from app import updateScore
-from app import printData
+from app import update_score
+from app import print_data
 KEY_INPUT = "input"
 SCORE_INPUT = 'score'
 ROLE_INPUT = 'role'
@@ -42,14 +42,14 @@ class BoardTestCase(unittest.TestCase):
         ]
     def test_user_success(self):
         for test in self.success_test_params:
-            actual_result = printData(test[BOARD_INPUT])
+            actual_result = print_data(test[BOARD_INPUT])
             expected_result=test[KEY_EXPECTED]
             self.assertEqual(actual_result, expected_result)
             self.assertEqual(len(actual_result), len(expected_result))
             
     def test_user_failure(self):
         for test in self.failure_test_params:
-            actual_result = printData(test[BOARD_INPUT])
+            actual_result = print_data(test[BOARD_INPUT])
             expected_result=test[KEY_EXPECTED]
             self.assertNotEqual(actual_result, expected_result)
             
@@ -91,13 +91,13 @@ class ScoreTestCase(unittest.TestCase):
         ]
     def test_user_success(self):
         for test in self.success_test_params:
-            actual_result = updateScore(test[SCORE_INPUT], test[ROLE_INPUT])
+            actual_result = update_score(test[SCORE_INPUT], test[ROLE_INPUT])
             expected_result=test[KEY_EXPECTED]
             self.assertEqual(actual_result, expected_result)
             self.assertNotEqual(test[SCORE_INPUT], expected_result)
     def test_user_failure(self):
         for test in self.failure_test_params:
-            actual_result = updateScore(test[SCORE_INPUT], test[ROLE_INPUT])
+            actual_result = update_score(test[SCORE_INPUT], test[ROLE_INPUT])
             expected_result=test[KEY_EXPECTED]
             self.assertNotEqual(actual_result, expected_result)
             

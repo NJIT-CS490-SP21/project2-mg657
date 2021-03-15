@@ -7,11 +7,7 @@ export function Login(props) {
   return (
     <div>
       <h1 className="login"> Login To Play! </h1>
-      <input
-        ref={playerRef}
-        type="text"
-        placeholder="Enter Username"
-      />
+      <input ref={playerRef} type="text" placeholder="Enter Username" />
       {' '}
       <br />
       <br />
@@ -22,16 +18,14 @@ export function Login(props) {
           onClickLogin();
         }}
       >
-        {' '}
         Login
-        {' '}
       </button>
       {' '}
     </div>
   );
 }
 Login.propTypes = {
-  playerRef: PropTypes.string.isRequired,
+  playerRef: PropTypes.objectOf(PropTypes.string).isRequired,
   onClickLogin: PropTypes.func.isRequired,
 };
 export default Login;

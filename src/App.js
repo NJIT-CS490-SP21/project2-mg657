@@ -62,13 +62,11 @@ function App() {
     // listens for event emitted by server, if received, run code for corresponding channel
     socket.on('send_players', (data) => {
       console.log('Login event received!');
-      console.log(data);
       const newPlayer = { ...data.players };
       setPlayers(newPlayer);
     });
     socket.on('leaderboard_info', (data) => {
       console.log('User list event received!');
-      console.log(data);
       setUserList(data.users);
       setScoreList(data.scores);
     });
@@ -93,6 +91,7 @@ function App() {
                 Leaderboard
               </button>
               <div
+                data-testid="leaderboard-div"
                 className={
                   isLeader ? 'displayLeaderboard' : 'displayLeaderboard2'
                 }

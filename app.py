@@ -1,5 +1,5 @@
 """
-This file handles all the socket listeners 
+This file handles all the socket listeners
 """
 import os
 from flask import Flask, send_from_directory, json
@@ -7,7 +7,6 @@ from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
-
 
 load_dotenv(find_dotenv())  # This is to load your env variables from .env
 app = Flask(
@@ -18,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 import models
+
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app,
                     cors_allowed_origins="*",
@@ -73,12 +73,18 @@ def on_board(data):
     The 'board' event is emitted from the server to all the clients except for
     the client that emmitted the event that triggered this function
     """
-    printData(data)
+    print_data(data)
     socketio.emit("board", data, broadcast=True, include_self=False)
     return data
-def printData(data):
+
+
+def print_data(data):
+    """
+    Prints data that is emitted to socket
+    """
     print(str(data))
     return data
+
 
 @socketio.on("send_players")
 def on_login(data):
@@ -86,9 +92,8 @@ def on_login(data):
     When client logs in, this function is run
     The updated dictionary of players and spectators is sent
     """
-    printData(data)
+    print_data(data)
     socketio.emit("send_players", data, broadcast=True, include_self=False)
-    
 
 
 @socketio.on("resetBoard")
@@ -97,31 +102,39 @@ def on_reset_board(data):
     When a client tries to reset the board, this function is run
     The empty board is sent back
     """
-    printData(data)
+    print_data(data)
     socketio.emit("resetBoard", data, broadcast=True, include_self=False)
-    
 
-def updateScore(score, role):
+
+def update_score(score, role):
     """
     This updates the score based on weather the user won or lost
     """
     if role == 'winner':
-        return score+1
+        score = score + 1
     if role == 'loser':
-        return score-1
+        score = score - 1
+    return score
+
+
 def update_score_db(win, lost):
+    """
+    This updates the score in the database, depending on which user won or lost
+    """
     leaderboard = {win: "", lost: ""}
-    if (win!= "" and lost != ""):
+    if (win != "" and lost != ""):
         winner = db.session.query(
             models.Leaderboard).filter_by(username=win).first()
         loser = db.session.query(
             models.Leaderboard).filter_by(username=lost).first()
-        winner.score = updateScore(winner.score, 'winner')
-        loser.score = updateScore(loser.score, 'loser')
+        winner.score = update_score(winner.score, 'winner')
+        loser.score = update_score(loser.score, 'loser')
         db.session.commit()
         leaderboard[win] = winner.score
         leaderboard[lost] = loser.score
     return leaderboard
+
+
 @socketio.on("winner")
 def on_win(data):
     """
@@ -135,13 +148,7 @@ def on_win(data):
     users, scores = calculate_scores()
     socketio.emit('leaderboard_info', {'users': users, 'scores': scores})
 
-def userExists(user):
-    """
-    Checks if the user is in the database
-    """
-    if models.Leaderboard.query.filter_by(username=user).first() is None:
-        return True
-    return False
+
 def add_user(user):
     """
     Adds user to database
@@ -154,6 +161,8 @@ def add_user(user):
     for person in all_people:
         users.append(person.username)
     return users
+
+
 @socketio.on('login')
 def on_join(data):
     """
@@ -162,7 +171,8 @@ def on_join(data):
     The updated lists are sent back
     """
     print(str(data))
-    if userExists(data['user']):
+    if models.Leaderboard.query.filter_by(
+            username=data['user']).first() is None:
         add_user(data['user'])
     users, scores = calculate_scores()
     socketio.emit('leaderboard_info', {'users': users, 'scores': scores})
