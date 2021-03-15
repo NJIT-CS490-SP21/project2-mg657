@@ -120,11 +120,9 @@ class UpdateScoreTestCase(unittest.TestCase):
                         mocked_query.all = self.mocked_person_query_all
                         print(self.initial_db_mock)
                         actual_result = update_score_db(test[WINNER_INPUT], test[LOSER_INPUT])
-                        print("ACTUAL:")
                         print(actual_result)
                         expected_result = test[KEY_EXPECTED]
                         print(self.initial_db_mock)
-                        print("EXPECTED:")
                         print(expected_result)
                         self.assertEqual(len(actual_result), len(expected_result))
                         self.assertEqual(actual_result, expected_result)
@@ -136,11 +134,9 @@ class UpdateScoreTestCase(unittest.TestCase):
                         mocked_query.all = self.mocked_person_query_all
                         print(self.initial_db_mock)
                         actual_result = update_score_db(test[WINNER_INPUT], test[LOSER_INPUT])
-                        print("ACTUAL:")
                         print(actual_result)
                         expected_result = test[KEY_EXPECTED]
                         print(self.initial_db_mock)
-                        print("EXPECTED:")
                         print(expected_result)
                         self.assertNotEqual(actual_result, expected_result)
 
