@@ -35,8 +35,8 @@ export function Board(props) {
           <div>
             {' '}
             <p>
-              {' '}
               The winner is
+              {' '}
               <b>{players.PlayerX}</b>
               !
             </p>
@@ -49,8 +49,8 @@ export function Board(props) {
           <div>
             {' '}
             <p>
-              {' '}
               The winner is
+              {' '}
               <b>{players.PlayerO}</b>
               !
             </p>
@@ -121,7 +121,7 @@ export function Board(props) {
           updateWinner(newBoard);
         }
         socket.emit('board', {
-          board: newBoard[index],
+          board: newBoard,
           index,
           isX,
         }); // send updated board, updated turn and index

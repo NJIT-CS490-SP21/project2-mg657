@@ -1,5 +1,5 @@
 """
-This file handles all the socket listeners
+This file handles all the socket listeners 
 """
 import os
 from flask import Flask, send_from_directory, json
@@ -65,15 +65,18 @@ def on_disconnect():
 
 
 @socketio.on("board")
-def on_chat(data):
+def on_board(data):
     """
     When a client emits a change in the board to the server, this function is run
     The 'board' event is emitted from the server to all the clients except for
     the client that emmitted the event that triggered this function
     """
-    print(str(data))
+    printData(data)
     socketio.emit("board", data, broadcast=True, include_self=False)
-
+    return data
+def printData(data):
+    print(str(data))
+    return data
 
 @socketio.on("send_players")
 def on_login(data):
@@ -81,8 +84,9 @@ def on_login(data):
     When client logs in, this function is run
     The updated dictionary of players and spectators is sent
     """
-    print(str(data))
+    printData(data)
     socketio.emit("send_players", data, broadcast=True, include_self=False)
+    
 
 
 @socketio.on("resetBoard")
@@ -91,9 +95,18 @@ def on_reset_board(data):
     When a client tries to reset the board, this function is run
     The empty board is sent back
     """
-    print(str(data))
+    printData(data)
     socketio.emit("resetBoard", data, broadcast=True, include_self=False)
+    
 
+def updateScore(score, role):
+    """
+    This updates the score based on weather the user won or lost
+    """
+    if role == 'winner':
+        return score+1
+    if role == 'loser':
+        return score-1
 
 @socketio.on("winner")
 def on_win(data):
@@ -109,12 +122,19 @@ def on_win(data):
             models.Leaderboard).filter_by(username=data['winner']).first()
         loser = db.session.query(
             models.Leaderboard).filter_by(username=data['loser']).first()
-        winner.score = winner.score + 1
-        loser.score = loser.score - 1
+        winner.score = updateScore(winner.score, 'winner')
+        loser.score = updateScore(loser.score, 'loser')
         db.session.commit()
     users, scores = calculate_scores()
     socketio.emit('leaderboard_info', {'users': users, 'scores': scores})
 
+def userExists(user):
+    """
+    Checks if the user is in the database
+    """
+    if models.Leaderboard.query.filter_by(username=user).first() is None:
+        return True
+    return False
 
 @socketio.on('login')
 def on_join(data):
@@ -124,8 +144,7 @@ def on_join(data):
     The updated lists are sent back
     """
     print(str(data))
-    if models.Leaderboard.query.filter_by(
-            username=data['user']).first() is None:
+    if userExists(data['user']):
         new_user = models.Leaderboard(username=data['user'], score=100)
         db.session.add(new_user)
         db.session.commit()
