@@ -89,7 +89,7 @@ class UpdateScoreTestCase(unittest.TestCase):
     def mocked_person_query_all(self):
         return self.initial_db_mock
     
-    def update_score_test_success(self):
+    def test_success(self):
         for test in self.success_test_params:
             with patch('app.db.session.add', self.mocked_db_session_add):
                 with patch('app.db.session.commit', self.mocked_db_session_commit):

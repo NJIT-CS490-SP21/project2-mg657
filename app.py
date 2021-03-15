@@ -8,6 +8,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 
+
 load_dotenv(find_dotenv())  # This is to load your env variables from .env
 app = Flask(
     __name__,
@@ -16,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
     'DATABASE_URL')  # Gets rid of warning
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+import models
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app,
                     cors_allowed_origins="*",
@@ -107,7 +109,19 @@ def updateScore(score, role):
         return score+1
     if role == 'loser':
         return score-1
-
+def update_score_db(win, lost):
+    leaderboard = {win: "", lost: ""}
+    if (win!= "" and lost != ""):
+        winner = db.session.query(
+            models.Leaderboard).filter_by(username=win).first()
+        loser = db.session.query(
+            models.Leaderboard).filter_by(username=lost).first()
+        winner.score = updateScore(winner.score, 'winner')
+        loser.score = updateScore(loser.score, 'loser')
+        db.session.commit()
+        leaderboard[win] = winner.score
+        leaderboard[lost] = loser.score
+    return leaderboard
 @socketio.on("winner")
 def on_win(data):
     """
@@ -117,14 +131,7 @@ def on_win(data):
     This change is committed to the database and the updated lists are sent back
     """
     print(str(data))
-    if (data['winner'] != "" and data['loser'] != ""):
-        winner = db.session.query(
-            models.Leaderboard).filter_by(username=data['winner']).first()
-        loser = db.session.query(
-            models.Leaderboard).filter_by(username=data['loser']).first()
-        winner.score = updateScore(winner.score, 'winner')
-        loser.score = updateScore(loser.score, 'loser')
-        db.session.commit()
+    update_score_db(data['winner'], data['loser'])
     users, scores = calculate_scores()
     socketio.emit('leaderboard_info', {'users': users, 'scores': scores})
 
@@ -135,7 +142,18 @@ def userExists(user):
     if models.Leaderboard.query.filter_by(username=user).first() is None:
         return True
     return False
-
+def add_user(user):
+    """
+    Adds user to database
+    """
+    new_user = models.Leaderboard(username=user, score=100)
+    db.session.add(new_user)
+    db.session.commit()
+    all_people = models.Leaderboard.query.all()
+    users = []
+    for person in all_people:
+        users.append(person.username)
+    return users
 @socketio.on('login')
 def on_join(data):
     """
@@ -145,9 +163,7 @@ def on_join(data):
     """
     print(str(data))
     if userExists(data['user']):
-        new_user = models.Leaderboard(username=data['user'], score=100)
-        db.session.add(new_user)
-        db.session.commit()
+        add_user(data['user'])
     users, scores = calculate_scores()
     socketio.emit('leaderboard_info', {'users': users, 'scores': scores})
 
@@ -155,7 +171,6 @@ def on_join(data):
 # Note we need to add this line so we can import app in the python shell
 if __name__ == "__main__":
     db.create_all()
-    import models
     # To run, socketio.run is called with app arg
     socketio.run(
         app,

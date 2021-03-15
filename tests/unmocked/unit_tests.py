@@ -25,6 +25,7 @@ class BoardTestCase(unittest.TestCase):
                KEY_EXPECTED: {'board': ['', '', '', '', '', '', '', '', ''], 'isX': True}
             },
             ]
+        
         self.failure_test_params = [
             {
                BOARD_INPUT: {'board': ['X', '', 'O', 'X', 'X', 'O', '', '', ''], 'index': 4, 'isX': True},
