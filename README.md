@@ -1,6 +1,6 @@
 # Project 2 - Tic Tac Toe
 
-Preview Application: [https://tictactoe490.herokuapp.com/](https://tictactoe490.herokuapp.com/)
+Preview Application: [https://xandos490.herokuapp.com/](https://xandos490.herokuapp.com/)
 
 ## Clone the repo
 
